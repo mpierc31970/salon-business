@@ -47,7 +47,7 @@ export function Portrait({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={photoUrl(seat.photo)}
-      alt={`${seat.name}, barber`}
+      alt={`${seat.name}, ${seat.headline || "stylist"}`}
       width={1024}
       height={1536}
       loading={eager ? "eager" : "lazy"}
@@ -76,13 +76,13 @@ export function BookButton({
 export function BarberCard({ seat }: { seat: PublicSeat }) {
   return (
     <li className="flex w-full flex-col gap-4 sm:w-[calc((100%-2rem)/2)] lg:w-[calc((100%-4rem)/3)] border-t-2 border-site-primary bg-site-surface-raised">
-      <a href={`/barbers/${seat.slug}`} className="block no-underline">
+      <a href={`/team/${seat.slug}`} className="block no-underline">
         <Portrait seat={seat} />
       </a>
       <div className="flex flex-1 flex-col gap-2 px-5 pb-5">
         <h2 className="text-[length:var(--site-text-h3)] font-semibold leading-tight">
           <a
-            href={`/barbers/${seat.slug}`}
+            href={`/team/${seat.slug}`}
             className="text-site-text no-underline hover:underline"
           >
             {seat.name}
@@ -92,7 +92,7 @@ export function BarberCard({ seat }: { seat: PublicSeat }) {
         <div className="mt-auto flex flex-wrap gap-3 pt-2">
           <BookButton seat={seat} />
           <a
-            href={`/barbers/${seat.slug}`}
+            href={`/team/${seat.slug}`}
             className={siteButtonClasses("secondary")}
           >
             About

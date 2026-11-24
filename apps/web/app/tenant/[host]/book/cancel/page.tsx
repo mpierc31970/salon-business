@@ -6,7 +6,7 @@ import { PageTitleHeader, siteButtonClasses } from "@cds/ui/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteForRequest } from "../../../../../lib/tenant";
-import { MUTED } from "../../barbers/BarberViews";
+import { MUTED } from "../../team/BarberViews";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +24,9 @@ function one(v: string | string[] | undefined): string {
 }
 
 function callShop(v: Exclude<CancelView, { state: "notfound" }>): string {
-  return v.shopPhone ? `call ${v.shopName} at ${v.shopPhone}` : "call the shop";
+  return v.shopPhone
+    ? `call ${v.shopName} at ${v.shopPhone}`
+    : "call the salon";
 }
 
 export default async function CancelPage({ params, searchParams }: Props) {
@@ -45,7 +47,7 @@ export default async function CancelPage({ params, searchParams }: Props) {
     body = (
       <p role="alert" className="border border-site-primary px-4 py-3">
         We couldn&apos;t find that appointment. The link may be incomplete. Call
-        the shop if you need to change a booking.
+        the salon if you need to change a booking.
       </p>
     );
   } else {

@@ -110,7 +110,7 @@ export default async function RentPage() {
         {!lease ? (
           <EmptyState
             heading="No chair rent set"
-            body="The shop owner sets your rent here."
+            body="The salon owner sets your chair rent here."
           />
         ) : (
           <div className={CARD}>
@@ -161,7 +161,7 @@ export default async function RentPage() {
       {rows.length === 0 ? (
         <EmptyState
           heading="No chair renters"
-          body="Barbers whose seat is a chair renter show here. Employees don't pay rent."
+          body="Stylists whose seat is a chair renter show here. Employees don't pay rent."
         />
       ) : (
         rows.map(({ seatId, seatName, lease }) => (

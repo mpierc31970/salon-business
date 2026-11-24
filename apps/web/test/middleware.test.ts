@@ -70,6 +70,20 @@ describe("middleware hostname routing (PLAT-02, D4)", () => {
     expect(new URL(rewrite!).pathname).toBe("/tenant/acme-yoga.com/about");
   });
 
+  it("308s the old /barbers pages to /team (salon fork)", async () => {
+    for (const [from, to] of [
+      ["/barbers", "/team"],
+      ["/barbers/ana?x=1", "/team/ana?x=1"],
+    ]) {
+      const res = await middleware(
+        req(`http://acme-yoga.com${from}`, "acme-yoga.com"),
+      );
+      expect(res.status, from).toBe(308);
+      const loc = new URL(res.headers.get("location")!);
+      expect(loc.pathname + loc.search, from).toBe(to);
+    }
+  });
+
   it("rewrites the tenant form endpoint (07-19)", async () => {
     const res = await middleware(
       req("http://acme-yoga.com/api/forms/abc123", "acme-yoga.com"),

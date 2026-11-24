@@ -22,6 +22,7 @@ describe("RESERVED_SLUGS", () => {
         "terms",
         // Studio Booking public routes
         "barbers",
+        "team",
         "book",
         // 11-35: bio short links
         "ig",

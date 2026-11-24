@@ -1,4 +1,4 @@
-// "./server": Studio Booking owns no page block (its public pages are /barbers and /book,
+// "./server": Studio Booking owns no page block (its public pages are /team and /book,
 // rendered by the tenant routes through @cds/db), so it reads no block records.
 export const blockCollections = [] as const;
 

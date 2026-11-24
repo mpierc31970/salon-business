@@ -1,6 +1,7 @@
 // Superior Salon: Studio Booking seed (idempotent). Installs the add-on (no charge: the
-// shop owns this fork), adds the five placeholder barber seats with their AI placeholder
-// portraits and a starter menu, and puts "Barbers" in the site menu.
+// salon owns this fork), adds the eight placeholder team seats with their AI placeholder
+// portraits and their own service menus, and puts "Our Team" (the /team route) in the
+// site menu.
 //
 //   npm run am:studio-seed
 //
@@ -33,24 +34,172 @@ import {
 
 const HOST = (process.env.AM_HOST || "salon.needtobeedgy.com").toLowerCase();
 const PLACEHOLDER_BIO =
-  "Placeholder profile. This barber's real name, photo and bio are coming soon.";
+  "Placeholder profile. This team member's real name, photo and bio are coming soon.";
 
-// TODO(owner): placeholder first names (4 Latino men, 1 Black woman, per the owner).
-const SEATS = [
-  ["Carlos", "Skin fades and sharp line-ups", "barber-1.webp"],
-  ["Miguel", "Beard sculpting and buzz cuts", "barber-2.webp"],
-  ["Luis", "Tapers and curly tops", "barber-3.webp"],
-  ["Diego", "Classic and modern fades", "barber-4.webp"],
-  ["Keisha", "Tapered natural cuts and shape-ups", "barber-5.webp"],
-] as const;
+// TODO(owner): real prices; 0 shows "Ask" on the site. [name, minutes, dollars, description]
+const MENU = {
+  cut: [
+    "Signature cut and finish",
+    75,
+    125,
+    "Consultation, precision cut, wash and a polished blow-dry.",
+  ],
+  blowout: [
+    "Blow-dry and style",
+    45,
+    75,
+    "Smooth, bouncy or undone: a finish that lasts for days.",
+  ],
+  color: [
+    "Creative color",
+    120,
+    225,
+    "All-over color, designed for your skin tone and lifestyle.",
+  ],
+  balayage: [
+    "Balayage and lived-in color",
+    180,
+    325,
+    "Hand-painted brightness that grows out softly. Includes gloss and finish.",
+  ],
+  gloss: [
+    "Gloss and tone",
+    45,
+    90,
+    "Shine, depth and a refreshed tone between color visits.",
+  ],
+  bridal: [
+    "Bridal and occasion styling",
+    90,
+    250,
+    "Polished updos and soft waves for the day itself.",
+  ],
+  trial: [
+    "Bridal trial",
+    60,
+    150,
+    "Plan and test your wedding-day look in advance.",
+  ],
+  facial: [
+    "Signature facial",
+    75,
+    195,
+    "Cleanse, exfoliate, extract and a sculpting massage with a custom mask.",
+  ],
+  glow: [
+    "Dermaplane and glow",
+    60,
+    165,
+    "Gentle resurfacing for smooth, luminous skin.",
+  ],
+  scalp: [
+    "Scalp ritual",
+    60,
+    145,
+    "Detox, exfoliation and a deep scalp massage for healthier growth.",
+  ],
+  trichology: [
+    "Trichology consultation",
+    45,
+    120,
+    "A close look at scalp and hair health, with a plan to follow.",
+  ],
+  manicure: [
+    "Gel manicure",
+    60,
+    65,
+    "Shaping, cuticle care and a long-wear gel finish.",
+  ],
+  nailart: [
+    "Structured gel and nail art",
+    90,
+    110,
+    "Strengthening overlay with hand-painted detail.",
+  ],
+  pedicure: ["Spa pedicure", 75, 95, "Soak, exfoliation, massage and polish."],
+  brows: [
+    "Brow lamination and tint",
+    60,
+    95,
+    "Lifted, shaped and tinted brows that stay put.",
+  ],
+  lashes: [
+    "Lash lift and tint",
+    60,
+    110,
+    "Curled, darkened natural lashes for six to eight weeks.",
+  ],
+  makeup: [
+    "Makeup application",
+    75,
+    175,
+    "Soft glam or editorial, for events and photographs.",
+  ],
+  bridalMakeup: [
+    "Bridal makeup",
+    120,
+    295,
+    "Long-wear bridal makeup, including lashes.",
+  ],
+} as const satisfies Record<string, readonly [string, number, number, string]>;
+type MenuKey = keyof typeof MENU;
 
-// TODO(owner): real prices; 0 shows "Ask" on the site.
-const MENU = [
-  ["Haircut", 30, "Clippers and shears, finished with a hot-towel neck shave."],
-  ["Skin fade", 45, "Bald to blended, any height on top."],
-  ["Beard trim and line-up", 20, "Shape, line and condition."],
-  ["Kids cut", 30, "12 and under."],
-] as const;
+// TODO(owner): placeholder team. [name, headline, portrait, services]
+const SEATS: readonly (readonly [
+  string,
+  string,
+  string,
+  readonly MenuKey[],
+])[] = [
+  [
+    "Isabelle Laurent",
+    "Creative Director and master colorist",
+    "barber-1.webp",
+    ["cut", "color", "gloss", "blowout"],
+  ],
+  [
+    "Sofia Marquez",
+    "Balayage and lived-in color specialist",
+    "barber-2.webp",
+    ["balayage", "gloss", "color", "blowout"],
+  ],
+  [
+    "Ava Chen",
+    "Bridal and editorial stylist",
+    "barber-3.webp",
+    ["bridal", "trial", "blowout", "cut"],
+  ],
+  [
+    "Naomi Brooks",
+    "Esthetician and skin therapist",
+    "barber-4.webp",
+    ["facial", "glow"],
+  ],
+  [
+    "Priya Raman",
+    "Nail artist",
+    "barber-5.webp",
+    ["manicure", "nailart", "pedicure"],
+  ],
+  [
+    "Lucia Romano",
+    "Brow and lash artist",
+    "barber-6.webp",
+    ["brows", "lashes"],
+  ],
+  [
+    "Julian Hayes",
+    "Scalp and trichology specialist",
+    "barber-7.webp",
+    ["scalp", "trichology", "cut"],
+  ],
+  [
+    "Zara Okafor",
+    "Makeup artist",
+    "barber-8.webp",
+    ["makeup", "bridalMakeup", "brows"],
+  ],
+];
 
 function log(line: string): void {
   console.log(line);
@@ -109,7 +258,7 @@ async function main(): Promise<void> {
   log("PASS studio-booking active");
 
   const existing = await listSeats(ctx);
-  for (const [name, headline, file] of SEATS) {
+  for (const [name, headline, file, services] of SEATS) {
     if (existing.some((s) => s.name === name)) continue;
     const { id } = await createSeat(ctx, { name, email: "", kind: "renter" });
     await updateSeat(ctx, id, {
@@ -124,19 +273,20 @@ async function main(): Promise<void> {
       "photo",
       { filename: file },
     );
-    for (const [svc, min, desc] of MENU) {
+    for (const key of services) {
+      const [svc, min, dollars, desc] = MENU[key];
       await saveSeatService(ctx, id, {
         name: svc,
         description: desc,
         durationMinutes: min,
-        priceCents: 0,
+        priceCents: dollars * 100,
       });
     }
     log(`PASS seat ${name} (placeholder)`);
   }
 
   // Step 2: every seat without hours gets the shop's opening hours (TODO(owner): each
-  // barber's own hours), so the placeholder seats can be booked.
+  // stylist's own hours), so the placeholder seats can be booked.
   const shopHours = await withSuperuser(async (pb) => {
     const p = await pb
       .collection("business_profile")
@@ -171,24 +321,26 @@ async function main(): Promise<void> {
     log(`PASS hours for ${seat.name}`);
   }
 
-  const url = `https://${HOST}/barbers`;
+  // The team pages live at /team; an older "Barbers" item pointing at /barbers is renamed.
+  const url = `https://${HOST}/team`;
+  const old = `https://${HOST}/barbers`;
   const nav = await getNav(ctx);
   if (nav && !nav.items.some((i) => i.target === url)) {
-    await saveNav(ctx, deps, {
-      ...nav,
-      items: [
-        ...nav.items,
-        {
-          id: newRecordId(),
-          label: "Barbers",
-          target: url,
-          new_tab: false,
-          children: [],
-        },
-      ],
-    });
+    const item = {
+      id: newRecordId(),
+      label: "Our Team",
+      target: url,
+      new_tab: false,
+      children: [],
+    };
+    const items = nav.items.some((i) => i.target === old)
+      ? nav.items.map((i) =>
+          i.target === old ? { ...i, label: "Our Team", target: url } : i,
+        )
+      : [...nav.items, item];
+    await saveNav(ctx, deps, { ...nav, items });
   }
-  log("PASS Barbers in the site menu");
+  log("PASS Our Team in the site menu");
 }
 
 main().catch((err: unknown) => {

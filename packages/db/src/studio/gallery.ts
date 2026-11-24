@@ -40,7 +40,7 @@ export async function raiseGalleryOffer(
   mediaId: string,
   barber: string,
 ): Promise<void> {
-  const who = barber || "A barber";
+  const who = barber || "A stylist";
   await raiseAlert(
     { orgId, as: mintSystemContext({ job: "studio-booking" }) },
     {

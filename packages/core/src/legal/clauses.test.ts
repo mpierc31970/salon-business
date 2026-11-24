@@ -68,7 +68,7 @@ describe("texts drawn from code, never copied", () => {
     expect(html).toContain("10");
     expect(html).toContain("14 business days");
     expect(html).toContain("report abuse or illegal content");
-    expect(html).toContain("pierce1970+BarberOwner@gmail.com");
+    expect(html).toContain("matthew@metaphysicalevents.com");
     expect(html).not.toContain("Report link");
   });
 

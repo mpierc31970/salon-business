@@ -365,7 +365,7 @@ export default async function HubLayout({ children }: { children: ReactNode }) {
       const seatId = ownSeatId;
       const seat = seatId ? await getSeat(ctx, seatId) : null;
       if (seat?.isPublished && seat.slug) {
-        profileUrl = `https://${host}/barbers/${seat.slug}`;
+        profileUrl = `https://${host}/team/${seat.slug}`;
       }
     } catch (err) {
       console.error(

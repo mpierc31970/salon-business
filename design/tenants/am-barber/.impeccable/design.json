@@ -1,26 +1,26 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-10T00:00:00Z",
-  "title": "Design System: Night Shift",
+  "generatedAt": "2026-11-24T00:00:00Z",
+  "title": "Design System: Ivory Atelier",
   "extensions": {
     "colorMeta": {
-      "black-glass": { "role": "neutral", "displayName": "Black Glass" },
-      "steel-chair": { "role": "neutral", "displayName": "Steel Chair" },
-      "chrome-white": { "role": "neutral", "displayName": "Chrome White" },
-      "smoke": { "role": "neutral", "displayName": "Smoke" },
-      "neon-red": { "role": "primary", "displayName": "Neon Red" },
-      "sign-white": { "role": "neutral", "displayName": "Sign White" },
-      "pole-blue": { "role": "tertiary", "displayName": "Pole Blue" },
+      "ivory": { "role": "neutral", "displayName": "Ivory" },
+      "linen": { "role": "neutral", "displayName": "Linen" },
+      "ink": { "role": "neutral", "displayName": "Ink" },
+      "taupe": { "role": "neutral", "displayName": "Taupe" },
+      "bronze": { "role": "primary", "displayName": "Bronze" },
+      "porcelain": { "role": "neutral", "displayName": "Porcelain" },
+      "champagne": { "role": "tertiary", "displayName": "Champagne" },
       "seam": { "role": "neutral", "displayName": "Seam" }
     },
     "roles": {
-      "surface": "black-glass",
-      "surface-raised": "steel-chair",
-      "text": "chrome-white",
-      "text-muted": "smoke",
-      "primary": "neon-red",
-      "primary-contrast": "sign-white",
-      "accent": "pole-blue",
+      "surface": "ivory",
+      "surface-raised": "linen",
+      "text": "ink",
+      "text-muted": "taupe",
+      "primary": "bronze",
+      "primary-contrast": "porcelain",
+      "accent": "champagne",
       "border": "seam"
     },
     "typographyMeta": {
@@ -50,32 +50,35 @@
       },
       {
         "name": "duration-quick",
-        "value": "160ms",
+        "value": "200ms",
         "purpose": "Button hover and focus."
       }
     ]
   },
   "components": [],
   "narrative": {
-    "northStar": "The Window at 10 p.m.",
-    "overview": "A barbershop seen from the street after dark: black glass, a red neon sign, a blue tube along the edge, chrome and steel inside. Heavy, square, loud where it counts.",
+    "northStar": "The Atelier at Ten in the Morning",
+    "overview": "A couture salon in soft daylight: ivory walls, cream linen, a brass mirror frame, deep ink type. Calm, airy and easy to read.",
     "keyCharacteristics": [
-      "Near-black grounds, chrome-white type, one red for action, one blue for edges.",
-      "Archivo 800-900 headings over Public Sans.",
-      "Square corners; hexagon cuts on media and badges.",
-      "Neon glow only on the hero heading and the primary button."
+      "Ivory and linen grounds, deep ink text, one bronze for action, champagne for fine lines.",
+      "Fraunces 400 headings over Instrument Sans.",
+      "Near-square corners; hairline champagne rules; generous white space.",
+      "No glow, no gradients, no heavy shadows."
     ],
     "rules": [
       {
-        "name": "The Two Tubes Rule",
-        "body": "Red and blue are the only colours with light in them. Nothing else glows.",
+        "name": "The One Line of Brass Rule",
+        "body": "Champagne appears as thin lines and small marks only, never as a fill behind text.",
         "section": "colors"
       }
     ],
     "dos": [
-      "Do keep Black Glass (#0A0A0C) as the ground for most of every page.",
-      "Do keep Neon Red (#E0242B) for things a visitor can press."
+      "Do keep Ivory (#FBF8F3) as the ground for most of every page.",
+      "Do keep Bronze (#7A5D3C) for things a visitor can press."
     ],
-    "donts": ["Don't round corners.", "Don't use gradients on text."]
+    "donts": [
+      "Don't put text on Champagne.",
+      "Don't add glow or gradients to text."
+    ]
   }
 }

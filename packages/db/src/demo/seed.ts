@@ -294,12 +294,20 @@ const CREDENTIALS: readonly Record<string, unknown>[] = [
 ];
 
 const CONTACTS: readonly { name: string; email: string; tags: string[] }[] = [
-  { name: "Jordan Park", email: "jordan.park@example.com", tags: ["regular"] },
-  { name: "Priya Shah", email: "priya.shah@example.com", tags: ["regular"] },
-  { name: "Alex Rivera", email: "alex.rivera@example.com", tags: ["colour"] },
-  { name: "Sam Lee", email: "sam.lee@example.com", tags: ["new"] },
-  { name: "Morgan Diaz", email: "morgan.diaz@example.com", tags: ["colour"] },
-  { name: "Casey Kim", email: "casey.kim@example.com", tags: ["new"] },
+  {
+    name: "Jordan Park",
+    email: "pierce1970+park@gmail.com",
+    tags: ["regular"],
+  },
+  { name: "Priya Shah", email: "pierce1970+shah@gmail.com", tags: ["regular"] },
+  {
+    name: "Alex Rivera",
+    email: "pierce1970+rivera@gmail.com",
+    tags: ["colour"],
+  },
+  { name: "Sam Lee", email: "pierce1970+lee@gmail.com", tags: ["new"] },
+  { name: "Morgan Diaz", email: "pierce1970+diaz@gmail.com", tags: ["colour"] },
+  { name: "Casey Kim", email: "pierce1970+kim@gmail.com", tags: ["new"] },
 ];
 
 const TICKET = {

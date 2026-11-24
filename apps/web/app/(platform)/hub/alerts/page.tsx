@@ -155,7 +155,7 @@ function TeamList({ rows, tz }: { rows: TeamAlert[]; tz: string }) {
     return (
       <EmptyState
         heading="No team alerts"
-        body="Alerts sent to your barbers show here."
+        body="Alerts sent to your team show here."
       />
     );
   }

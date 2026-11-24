@@ -33,7 +33,7 @@ export function MoveForm({
           className="min-h-9 rounded border border-hub-border-strong bg-hub-surface px-2"
         >
           <option value="" disabled>
-            Pick a barber
+            Pick a stylist
           </option>
           {others.map((s) => (
             <option key={s.id} value={s.id}>

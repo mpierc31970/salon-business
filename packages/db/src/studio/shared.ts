@@ -40,7 +40,7 @@ export function requireManager(
   action: "read" | "write",
 ): void {
   requireStudio(ctx, action);
-  if (!isManager(ctx)) throw new Forbidden("only the shop owner can do this");
+  if (!isManager(ctx)) throw new Forbidden("only the salon owner can do this");
 }
 
 function mapped(err: unknown): never {

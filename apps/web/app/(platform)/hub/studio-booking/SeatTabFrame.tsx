@@ -72,7 +72,7 @@ export async function SeatTabFrame({
         </InlineAlert>
       ) : null}
       {manager && seats.length > 1 ? (
-        <nav aria-label="Barber" className="flex flex-wrap gap-2 text-sm">
+        <nav aria-label="Stylist" className="flex flex-wrap gap-2 text-sm">
           {seats.map((s) => (
             <GuardedLink
               key={s.id}

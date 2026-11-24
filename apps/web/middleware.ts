@@ -227,6 +227,23 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
       c.kind,
     );
   }
+  // Salon fork: the team pages moved from /barbers to /team; old links redirect for good.
+  if (
+    c.kind === "tenant" &&
+    (req.method === "GET" || req.method === "HEAD") &&
+    /^\/barbers(\/|$)/i.test(pathname)
+  ) {
+    return secured(
+      NextResponse.redirect(
+        new URL(
+          pathname.replace(/^\/barbers/i, "/team") + req.nextUrl.search,
+          req.nextUrl,
+        ),
+        308,
+      ),
+      c.kind,
+    );
+  }
   // Next renders a Server Action's redirect with an internal fetch on localhost: those admin
   // paths are the same platform pages (an outside "Host: localhost" sees nothing else).
   const onSiteAdmin =

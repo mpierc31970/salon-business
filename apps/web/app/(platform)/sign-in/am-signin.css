@@ -1,44 +1,43 @@
-/* Salon fork: the sign-in screens wear the site's night look (black glass, the logo, Archivo
- * headings) over the hub's own forms, by re-pointing the hub tokens. Red fills keep white
- * text (5.9:1); text that would use the accent reads in a lighter red (6.6:1 on the card). */
+/* Salon fork: the sign-in screens wear the site's Ivory Atelier look (ivory and linen, the
+ * logo, Fraunces headings) over the hub's own forms, by re-pointing the hub tokens. Bronze
+ * fills keep white text (6.1:1); bronze links read 5.7:1 on ivory. */
 .am-signin {
-  --hub-surface: #141418;
-  --hub-surface-2: #0a0a0c;
-  --hub-accent: #c8161d;
-  --hub-accent-hover: #a80f15;
-  --hub-accent-tint: #2a1416;
-  --hub-danger: #ff7a7a;
-  --hub-danger-tint: #2a1214;
-  --hub-ink: #f2f2f2;
-  --hub-ink-muted: #a8a8b0;
-  --hub-border: #26262c;
-  --hub-border-strong: #6e6e78;
-  --hub-success: #5ad18a;
-  --hub-success-tint: #10241a;
-  --hub-warning: #f2b84b;
-  --hub-warning-tint: #2a2210;
-  --hub-font: "Public Sans Variable", ui-sans-serif, system-ui, sans-serif;
-  color-scheme: dark;
+  --hub-surface: #fbf8f3;
+  --hub-surface-2: #f3ede4;
+  --hub-accent: #7a5d3c;
+  --hub-accent-hover: #634a2f;
+  --hub-accent-tint: #efe6d8;
+  --hub-danger: #a12b2b;
+  --hub-danger-tint: #f8e6e3;
+  --hub-ink: #2b2724;
+  --hub-ink-muted: #675e55;
+  --hub-border: #e3d9cb;
+  --hub-border-strong: #8a7f73;
+  --hub-success: #2f6b45;
+  --hub-success-tint: #e5f0e8;
+  --hub-warning: #7a5410;
+  --hub-warning-tint: #f6ecd6;
+  --hub-font: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  color-scheme: light;
   accent-color: var(--hub-accent);
   caret-color: var(--hub-ink);
 }
 .am-signin h1 {
-  font-family: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
+  font-family: "Fraunces Variable", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.005em;
 }
 .am-signin .text-hub-accent,
 .am-signin a:not([class*="bg-"]) {
-  color: #ff8a8f;
+  color: var(--hub-accent);
 }
 .am-signin input,
 .am-signin select,
 .am-signin textarea {
-  background-color: #0a0a0c;
+  background-color: #fff;
   color: var(--hub-ink);
 }
-/* The primary button writes its label in the surface colour (dark here): white instead. */
+/* The primary button writes its label in the surface colour (ivory here): white instead. */
 .am-signin .bg-hub-accent {
   color: #ffffff;
 }

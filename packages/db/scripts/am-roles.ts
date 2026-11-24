@@ -3,7 +3,7 @@
 //     password + emailed code). Staff are never shop members, so its shop membership goes.
 //   - Shop owner: AM_OWNER_EMAIL owns the shop (/sign-in: password or emailed code):
 //     profile, pages, site content, barbers.
-//   - Barbers: each other seat signs in as AM_BARBER_EMAIL with {n} = N (default barber{n}@example.com), a
+//   - Barbers: each other seat signs in as AM_BARBER_EMAIL with {n} = N (default pierce1970+salon{n}@gmail.com), a
 //     renter/staff member who sees only their own seat.
 //
 //   npm run am:roles
@@ -142,11 +142,11 @@ async function main(): Promise<void> {
 
   // Barbers. The owner's own seat (AM_OWNER_SEAT, e.g. Miguel) belongs to the shop owner's
   // account and is an Employee seat (no chair rent). Every other seat, in the owner's order,
-  // signs in as AM_BARBER_EMAIL (barber{n}@example.com) with a renter/staff membership (the seat's kind)
+  // signs in as AM_BARBER_EMAIL (pierce1970+salon{n}@gmail.com) with a renter/staff membership (the seat's kind)
   // and the Studio Booking grant; the seat links itself on first sign-in (email match,
   // studio/shared ownSeat). Leftover barber<N> accounts are removed.
   const pattern =
-    process.env.AM_BARBER_EMAIL?.trim() || "barber{n}@example.com";
+    process.env.AM_BARBER_EMAIL?.trim() || "pierce1970+salon{n}@gmail.com";
   const barberEmail = (k: number) =>
     pattern.replace("{n}", String(k)).toLowerCase();
   const ownerSeat = process.env.AM_OWNER_SEAT?.trim().toLowerCase() || "";

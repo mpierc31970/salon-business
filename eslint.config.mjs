@@ -370,6 +370,8 @@ export default [
       ".base-ast-cache/**",
       "scripts/runner/**",
       ".lighthouseci/**",
+      // Vendored agent skill scripts (impeccable), not app code.
+      ".claude/**",
     ],
   },
   ...tseslint.configs.recommended,

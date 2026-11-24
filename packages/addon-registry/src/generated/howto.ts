@@ -156,25 +156,25 @@ export const HOWTO_STEPS: Readonly<Record<string, readonly HowToStep[]>> = Objec
       },
       {
         "screen": "Sign-in email",
-        "action": "To change the email you sign in with, ask the shop owner",
+        "action": "To change the email you sign in with, ask the salon owner",
         "expected": "The owner updates it for you"
       }
     ],
     "docs/how-to/addon-studio-booking.md": [
       {
         "screen": "`/hub/studio-booking`",
-        "action": "Under **Add a barber**, type the **Name** and **Email**, pick **Seat** (Chair renter or Employee) and click **Add barber**",
-        "expected": "The barber's seat screen opens and reads \"Barber added. Fill in their page, then send the invite.\""
+        "action": "Under **Add a stylist**, type the **Name** and **Email**, pick **Seat** (Chair renter or Employee) and click **Add stylist**",
+        "expected": "The stylist's seat screen opens and reads \"Stylist added. Fill in their page, then send the invite.\""
       },
       {
         "screen": "`/hub/studio-booking/seats/<id>`",
-        "action": "Fill **Headline** and **Bio** (optional: **Shop or chair name**, **Texas barber license number** and **Social links**, a link or an @handle each), tick **Show this barber on the site** and click **Save**",
+        "action": "Fill **Headline** and **Bio** (optional: **Salon or chair name**, **Texas cosmetology license number** and **Social links**, a link or an @handle each), tick **Show this stylist on the site** and click **Save**",
         "expected": "\"Saved.\" shows and the badge reads **On the site**"
       },
       {
         "screen": "Seat screen, **Photos**",
         "action": "Under **Add a portrait** pick a photo and click **Upload**",
-        "expected": "\"Photo added.\" shows with the portrait. A **Logo** (the barber's own brand) and gallery photos (up to 8) work the same way. Shop name, logo, socials and license show on that barber's page only"
+        "expected": "\"Photo added.\" shows with the portrait. A **Logo** (the stylist's own brand) and gallery photos (up to 8) work the same way. Salon or chair name, logo, socials and license show on that stylist's page only"
       },
       {
         "screen": "Seat screen, **Services and prices**",
@@ -184,27 +184,27 @@ export const HOWTO_STEPS: Readonly<Record<string, readonly HowToStep[]>> = Objec
       {
         "screen": "Seat screen, **Sign-in and removal**",
         "action": "Click **Send invite**",
-        "expected": "\"Invite sent. The link works for 7 days.\" The barber gets an email; after joining, their badge reads **Signed in**"
+        "expected": "\"Invite sent. The link works for 7 days.\" The stylist gets an email; after joining, their badge reads **Signed in**"
       },
       {
-        "screen": "Barber's own sign-in, `/hub/studio-booking`",
-        "action": "The barber signs in on the hub and clicks **Barbers**",
+        "screen": "Stylist's own sign-in, `/hub/studio-booking`",
+        "action": "The stylist signs in on the hub and clicks **Team**",
         "expected": "Their own seat opens. They can edit their page, photos and menu, nothing else"
       },
       {
         "screen": "Seat screen",
-        "action": "Click **Remove barber…**, then **Remove <name>**",
-        "expected": "\"Barber removed. Their sign-in to this site is closed.\" Their page is gone from the site"
+        "action": "Click **Remove stylist…**, then **Remove <name>**",
+        "expected": "\"Stylist removed. Their sign-in to this site is closed.\" Their page is gone from the site"
       },
       {
-        "screen": "Your site, `/barbers`",
+        "screen": "Your site, `/team`",
         "action": "Open the page",
-        "expected": "Every barber shown on the site, each with **Book** and **About**"
+        "expected": "Every stylist shown on the site, each with **Book** and **About**"
       },
       {
         "screen": "Seat screen, **Hours and time off**",
         "action": "Tick **Working** for each day, set **From** and **To** (15-minute steps), pick **Booking interval** (default 1 hour) and click **Save hours**",
-        "expected": "\"Hours saved.\" Clients can now book this barber inside those hours, one start time per interval"
+        "expected": "\"Hours saved.\" Clients can now book this stylist inside those hours, one start time per interval"
       },
       {
         "screen": "Seat screen, **Blocked time**",
@@ -213,31 +213,31 @@ export const HOWTO_STEPS: Readonly<Record<string, readonly HowToStep[]>> = Objec
       },
       {
         "screen": "Your site, `/book`",
-        "action": "Pick a barber, a service, a day and a time, fill **Your name** and **Email**, click **Book it**",
-        "expected": "\"You're booked\" with the booking number. The client gets a confirmation email; the barber and the owner get a hub alert (bell and email). If someone else just took that time, the client sees \"Sorry — someone just booked…\" with that day's other open times, and the barber and the owner get a **Missed booking** alert (pushed at once) with **Email**, **Call** and **Text** to reach the client; no booking is made. A client who clicks **Cancel this appointment** in their email and then **Cancel appointment** frees the time; the barber and the owner get a **Client cancelled** alert (pushed at once) with **Email**, **Call** and **Text**"
+        "action": "Pick a stylist, a service, a day and a time, fill **Your name** and **Email**, click **Book it**",
+        "expected": "\"You're booked\" with the booking number. The client gets a confirmation email; the stylist and the owner get a hub alert (bell and email). If someone else just took that time, the client sees \"Sorry — someone just booked…\" with that day's other open times, and the stylist and the owner get a **Missed booking** alert (pushed at once) with **Email**, **Call** and **Text** to reach the client; no booking is made. A client who clicks **Cancel this appointment** in their email and then **Cancel appointment** frees the time; the stylist and the owner get a **Client cancelled** alert (pushed at once) with **Email**, **Call** and **Text**"
       },
       {
         "screen": "`/hub/studio-booking/bookings`",
-        "action": "Open **Bookings** (a barber sees **My bookings**)",
-        "expected": "Upcoming bookings by day. The owner can filter by barber"
+        "action": "Open **Bookings** (a stylist sees **My bookings**)",
+        "expected": "Upcoming bookings by day. The owner can filter by stylist"
       },
       {
         "screen": "Bookings, one booking",
         "action": "Click **Done**, **No-show** or **Cancel and email client**",
-        "expected": "The badge changes. Cancel emails the client that the shop cancelled"
+        "expected": "The badge changes. Cancel emails the client that the salon cancelled"
       },
       {
         "screen": "(automatic)",
-        "action": "Every 15 minutes the shop's job runs",
+        "action": "Every 15 minutes the salon's job runs",
         "expected": "Each client gets one reminder email about a day before their booking"
       },
       {
         "screen": "`/hub/studio-booking/rent`",
         "action": "Under a chair renter, open **Set rent**, fill **Rent ($)**, pick **How often** and **Next due**, click **Save rent**",
-        "expected": "\"Rent saved.\" The barber shows **Up to date** with the amount and next due date"
+        "expected": "\"Rent saved.\" The stylist shows **Up to date** with the amount and next due date"
       },
       {
-        "screen": "Rent, one barber",
+        "screen": "Rent, one stylist",
         "action": "When they pay, check **Amount ($)** and **Paid on**, click **Mark <date> paid**",
         "expected": "\"Payment logged.\" The payment is listed and **Next due** moves on one period"
       },
@@ -249,10 +249,10 @@ export const HOWTO_STEPS: Readonly<Record<string, readonly HowToStep[]>> = Objec
       {
         "screen": "(automatic)",
         "action": "A due date passes without a payment",
-        "expected": "The barber shows **N days late**, a warning lists who is late, and the owner gets one hub alert (bell and email) per missed date"
+        "expected": "The stylist shows **N days late**, a warning lists who is late, and the owner gets one hub alert (bell and email) per missed date"
       },
       {
-        "screen": "Barber's own sign-in, **My Rent**",
+        "screen": "Stylist's own sign-in, **My Rent**",
         "action": "Open the tab",
         "expected": "Their rent, next due date and payments, read-only"
       }

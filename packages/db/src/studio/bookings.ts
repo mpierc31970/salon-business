@@ -178,9 +178,9 @@ function contactLine(
   shop: Shop,
   canReply: boolean,
 ): string {
-  const call = shop.phone ? `call ${shop.phone}` : "call the shop";
+  const call = shop.phone ? `call ${shop.phone}` : "call the salon";
   return canReply
-    ? ` ${ask} Reply to this email to reach ${barber || "your barber"} and the shop, or ${call}.`
+    ? ` ${ask} Reply to this email to reach ${barber || "your stylist"} and the salon, or ${call}.`
     : ` ${ask} ${call[0]!.toUpperCase()}${call.slice(1)}.`;
 }
 
@@ -240,7 +240,7 @@ export function whenLabel(startsAtMs: number, tz: string): string {
 }
 
 function priceLabel(cents: number): string {
-  if (cents <= 0) return "Ask in the shop";
+  if (cents <= 0) return "Ask at the salon";
   const d = cents / 100;
   return `$${Number.isInteger(d) ? d : d.toFixed(2)}`;
 }
@@ -442,7 +442,7 @@ export async function createPublicBooking(
     throw new InvalidInput("Pick a day and a time.");
   }
   if (bookLimiter.take(`${site.orgId}:${ip || "?"}`) === null) {
-    throw new RateLimited("too many bookings from here; call the shop");
+    throw new RateLimited("too many bookings from here; call the salon");
   }
   const now = deps.now ?? Date.now();
   const made = await withOrgLock(`studio:${site.orgId}`, () =>
@@ -530,7 +530,7 @@ export async function createPublicBooking(
   const barber = str(made.seat.name);
   const service = str(made.svc.name);
   const facts: [string, string][] = [
-    ["Barber", barber],
+    ["Stylist", barber],
     ["Service", service],
     ["When", when],
     ["Price", priceLabel(num(made.svc.price_cents))],
@@ -543,7 +543,7 @@ export async function createPublicBooking(
     email,
     {
       subject: `Request received: ${barber}, ${when}`,
-      lead: `Thanks, ${name}. Your request at ${made.shop.name} is in. ${barber || "Your barber"} will confirm it, and we'll email you when they do.`,
+      lead: `Thanks, ${name}. Your request at ${made.shop.name} is in. ${barber || "Your stylist"} will confirm it, and we'll email you when they do.`,
       facts,
       why: `You're getting this because you asked to book online at ${made.shop.name}.${contactLine("Questions?", barber, made.shop, made.replyTo.length > 0)}`,
       ...cancelButton(made.id),
@@ -708,19 +708,19 @@ function statusMail(
   if (next === "confirmed") {
     return {
       subject: `You're booked with ${barber}, ${when}`,
-      lead: `Good news: ${barber || "your barber"} confirmed your booking at ${shop.name} on ${when}. We'll remind you the day before.`,
+      lead: `Good news: ${barber || "your stylist"} confirmed your booking at ${shop.name} on ${when}. We'll remind you the day before.`,
     };
   }
   if (next === "declined") {
     return {
-      subject: `${barber || "Your barber"} can't take your booking request`,
-      lead: `Sorry, ${barber || "your barber"} can't take your request at ${shop.name} on ${when}. Pick another time online or get in touch.`,
+      subject: `${barber || "Your stylist"} can't take your booking request`,
+      lead: `Sorry, ${barber || "your stylist"} can't take your request at ${shop.name} on ${when}. Pick another time online or get in touch.`,
     };
   }
   if (next === "cancelled") {
     return {
       subject: `Your booking with ${barber} was cancelled`,
-      lead: `Your booking at ${shop.name} on ${when} was cancelled by the shop.`,
+      lead: `Your booking at ${shop.name} on ${when} was cancelled by the salon.`,
     };
   }
   return null;
@@ -798,7 +798,7 @@ export async function setBookingStatus(
     {
       ...mail,
       facts: [
-        ["Barber", str(row.seat.name)],
+        ["Stylist", str(row.seat.name)],
         ["Service", str(row.r.service_name)],
         ["When", when],
         ["Booking", str(row.r.reference)],
@@ -845,7 +845,7 @@ export async function transferBooking(
       throw new InvalidInput("That booking is over.");
     }
     if (str(r.seat) === toSeatId) {
-      throw new InvalidInput("Pick another barber.");
+      throw new InvalidInput("Pick another stylist.");
     }
     const seat = await seatFor(pb, ctx, toSeatId);
     const clash = await pb.collection("studio_bookings").getList(1, 1, {
@@ -915,10 +915,10 @@ export async function transferBooking(
     "booking.notice",
     str(done.r.client_email),
     {
-      subject: `Your barber is now ${barber}, ${when}`,
-      lead: `Same time, new barber: ${barber} will take your booking at ${done.shop.name} on ${when}.`,
+      subject: `Your stylist is now ${barber}, ${when}`,
+      lead: `Same time, new stylist: ${barber} will take your booking at ${done.shop.name} on ${when}.`,
       facts: [
-        ["Barber", barber],
+        ["Stylist", barber],
         ["Service", service],
         ["When", when],
         ["Booking", str(done.r.reference)],
@@ -948,7 +948,7 @@ async function mayTakeOver(
   const start = Date.parse(str(r.starts_at));
   if (!isFlagged(status(r.status), start, now, flagHours)) {
     throw new InvalidInput(
-      `The barber has until ${flagHours} hours before to answer.`,
+      `The stylist has until ${flagHours} hours before to answer.`,
     );
   }
 }
@@ -1058,11 +1058,11 @@ export async function rescheduleBooking(
   const mail = done.wasRequest
     ? {
         subject: `You're booked with ${barber}, ${when}`,
-        lead: `${barber || "Your barber"} confirmed your booking at ${done.shop.name} for a new time: ${when}. If that doesn't work, cancel below or get in touch.`,
+        lead: `${barber || "Your stylist"} confirmed your booking at ${done.shop.name} for a new time: ${when}. If that doesn't work, cancel below or get in touch.`,
       }
     : {
         subject: `New time with ${barber}: ${when}`,
-        lead: `${barber || "Your barber"} moved your booking at ${done.shop.name} to ${when}. If that time doesn't work, cancel below or get in touch.`,
+        lead: `${barber || "Your stylist"} moved your booking at ${done.shop.name} to ${when}. If that time doesn't work, cancel below or get in touch.`,
       };
   await sendEmail(
     { kind: "org", ctx, orgId: ctx.orgId },
@@ -1071,7 +1071,7 @@ export async function rescheduleBooking(
     {
       ...mail,
       facts: [
-        ["Barber", barber],
+        ["Stylist", barber],
         ["Service", str(done.r.service_name)],
         ["When", when],
         ["Booking", str(done.r.reference)],
@@ -1243,7 +1243,7 @@ export async function runStudioReminders(
           subject: `Reminder: ${facts.seat}, ${when}`,
           lead: `See you soon at ${facts.shop.name}.`,
           facts: [
-            ["Barber", facts.seat],
+            ["Stylist", facts.seat],
             ["Service", str(r.service_name)],
             ["When", when],
             ["Booking", str(r.reference)],
@@ -1399,7 +1399,7 @@ export async function cancelPublicBooking(
 ): Promise<CancelView> {
   assertSiteContext(site);
   if (cancelLimiter.take(`${site.orgId}:${ip || "?"}`) === null) {
-    throw new RateLimited("too many tries from here; call the shop");
+    throw new RateLimited("too many tries from here; call the salon");
   }
   const now = deps.now ?? Date.now();
   const done = await withOrgLock(`studio:${site.orgId}`, () =>
@@ -1426,7 +1426,7 @@ export async function cancelPublicBooking(
       subject: `Cancelled: ${view.barber}, ${view.when}`,
       lead: `You cancelled your booking at ${view.shopName} on ${view.when}. Book again any time online.`,
       facts: [
-        ["Barber", view.barber],
+        ["Stylist", view.barber],
         ["Service", view.service],
         ["When", view.when],
         ["Booking", view.reference],

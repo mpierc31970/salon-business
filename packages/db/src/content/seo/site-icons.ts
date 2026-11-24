@@ -162,12 +162,14 @@ async function readInputs(orgId: string): Promise<Inputs | null> {
       if (err instanceof ClientResponseError && err.status === 404) return null;
       throw err;
     }
+    // Salon fork: a square "Site icon: ..." image (kind moodboard, never placed on a page)
+    // wins over the newest logo, so a wide wordmark logo still gets a legible favicon.
     const logos = await pb.collection("media_assets").getList(1, 1, {
       filter: pb.filter(
-        "organization = {:org} && kind = 'logo' && removed_at = ''",
+        "organization = {:org} && removed_at = '' && (kind = 'logo' || (kind = 'moodboard' && alt ~ 'Site icon:%'))",
         { org: orgId },
       ),
-      sort: "-created",
+      sort: "-kind,-created",
       fields: "id,original_ext",
       skipTotal: true,
     });

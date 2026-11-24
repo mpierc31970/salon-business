@@ -1,15 +1,17 @@
-# Service photos
+# Service photos: AI-generated
 
-Stock photos under the Unsplash License (free for commercial use, no attribution required).
-Downloaded 2026-11-10, resized to 1200px and converted to WebP. The seed uploads them to the
-site's media library; the owner can swap any of them in the hub page builder.
+Generated 2026-11-24 with OpenAI `gpt-image-1.5` (text to image, quality medium, 1536x1024),
+resized to 1200px wide and converted to WebP. No real people. The seed (`npm run am:seed`)
+uploads them to the site's media library; the owner can swap any of them in the hub page
+builder.
 
-| File                 | Photo                                                                                     | Photographer   |
-| -------------------- | ----------------------------------------------------------------------------------------- | -------------- |
-| haircut.webp         | https://unsplash.com/photos/a-man-getting-his-hair-cut-by-a-barber-8HkPnJhC5Ic            | Salah Regouane |
-| skin-fade.webp       | https://unsplash.com/photos/man-in-white-dress-shirt-cutting-hair-of-man-Q82AM6BWBPM      | Michael DeMoya |
-| beard-trim.webp      | https://unsplash.com/photos/barber-trimming-beard-in-salon-4k60yfGy7fU                    | Mr Shave       |
-| hot-towel-shave.webp | https://unsplash.com/photos/man-shaving-lying-man-FWgYghZrVqU                             | Alex Mihai C   |
-| kids-cut.webp        | https://unsplash.com/photos/a-young-boy-getting-his-hair-cut-at-a-barber-shop-4brY7Bwss1I | Ibrahim guetar |
-
-License: https://unsplash.com/license
+| File              | Service                     |
+| ----------------- | --------------------------- |
+| cut-finish.webp   | Signature cut and finish    |
+| balayage.webp     | Balayage and lived-in color |
+| bridal.webp       | Bridal and occasion styling |
+| facial.webp       | Signature facial            |
+| scalp-ritual.webp | Scalp ritual                |
+| nails.webp        | Nail artistry               |
+| brows-lashes.webp | Brow and lash design        |
+| makeup.webp       | Makeup artistry             |

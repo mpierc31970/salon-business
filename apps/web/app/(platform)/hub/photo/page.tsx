@@ -24,14 +24,14 @@ export default async function PhotoPage() {
       {seatId ? (
         <>
           <p className="text-base">
-            The photo goes into your gallery on your barber page.
+            The photo goes into your gallery on your stylist page.
           </p>
           <PhotoPicker seatId={seatId} />
         </>
       ) : (
         <InlineAlert tone="info">
-          Photos go into a barber&apos;s own gallery. This account has no barber
-          page.
+          Photos go into a stylist&apos;s own gallery. This account has no
+          stylist page.
         </InlineAlert>
       )}
     </div>

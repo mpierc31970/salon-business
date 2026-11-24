@@ -89,7 +89,7 @@ async function act(
 export async function addSeatAction(form: FormData): Promise<void> {
   await act(
     STUDIO_BASE,
-    "Barber added. Fill in their page, then send the invite.",
+    "Stylist added. Fill in their page, then send the invite.",
     async ({ ctx }) => {
       const { id } = await createSeat(ctx, {
         name: field(form, "name"),
@@ -142,7 +142,7 @@ export async function removeSeatAction(form: FormData): Promise<void> {
   const seatId = idField(form, "seatId");
   await act(
     STUDIO_BASE,
-    "Barber removed. Their sign-in to this site is closed.",
+    "Stylist removed. Their sign-in to this site is closed.",
     async ({ ctx }) => {
       await removeSeat(ctx, seatId);
       return STUDIO_BASE;
@@ -356,7 +356,7 @@ export async function transferBookingAction(form: FormData): Promise<void> {
   const onAlerts = field(form, "back") === "/hub/alerts";
   await act(
     onAlerts ? null : `${STUDIO_BASE}/bookings`,
-    "Moved. The barber and client were told.",
+    "Moved. The stylist and client were told.",
     async ({ ctx }) => {
       await transferBooking(
         ctx,

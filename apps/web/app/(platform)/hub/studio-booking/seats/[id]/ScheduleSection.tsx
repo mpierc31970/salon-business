@@ -58,7 +58,7 @@ export function ScheduleSection({
       <form action={saveHoursAction} className={CARD}>
         <input type="hidden" name="seatId" value={seatId} />
         <p className="text-sm text-hub-ink-muted">
-          Clients can book you only inside these hours. Shop time zone.
+          Clients can book you only inside these hours. Salon time zone.
         </p>
         <table className="w-full text-left">
           <thead className="sr-only">

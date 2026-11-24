@@ -31,6 +31,7 @@ import { withSuperuser } from "../src/client";
 import { addPageToNav } from "../src/content/chrome/nav";
 import { createPage, listPages, updatePage } from "../src/content/pages";
 import { recordingInvalidator } from "../src/content/ports";
+import { regenerateSiteIcons } from "../src/content/seo/site-icons";
 import { publishPage, type PublishDeps } from "../src/content/publish";
 import {
   getContentScanner,
@@ -57,10 +58,10 @@ const NAME = "Superior Salon";
 // matthew@ is the site's staff super_admin only (npm run am:roles); staff and shop members
 // never share an account (invariant 7).
 const OWNER_EMAIL = (
-  process.env.AM_OWNER_EMAIL || "pierce1970+BarberOwner@gmail.com"
+  process.env.AM_OWNER_EMAIL || "pierce1970+salonowner@gmail.com"
 ).toLowerCase();
-const OWNER_NAME = "Shop owner";
-const CONTACT_EMAIL = "pierce1970+BarberOwner@gmail.com";
+const OWNER_NAME = "Salon owner";
+const CONTACT_EMAIL = "matthew@metaphysicalevents.com";
 const HOST = (process.env.AM_HOST || "salon.needtobeedgy.com").toLowerCase();
 const PHONE = "(214) 518-6852";
 const TEL = "tel:+12145186852";
@@ -76,33 +77,69 @@ const DIRECTIONS =
     "Superior Salon, 2505 S Carrier Pkwy, Grand Prairie, TX 75052",
   );
 const LOGO = "apps/web/public/am-barber/logo.png";
+// The square S monogram: the favicon / app icon source (site-icons.ts prefers a
+// "Site icon:" moodboard row over the wide wordmark logo).
+const ICON = "apps/web/public/am-barber/icon.png";
+const ICON_ALT = "Site icon: Superior Salon S monogram in a champagne ring";
 const LOGO_ALT =
-  "Superior Salon logo: a red A and a blue M over Barber Studio, with a straight razor, est. 2020";
+  "Superior Salon logo: an S monogram in a fine champagne ring above the Superior Salon wordmark";
 const IP = "am-seed";
 
-// TODO(owner): replace with the real menu and prices ("ask" shows "Ask for a price").
+// TODO(owner): replace with the real menu and prices. [name, description, "from" dollars]
 const SERVICES = [
   [
-    "Haircut",
-    "Classic cut, clippers and shears, finished with a hot-towel neck shave.",
+    "Signature cut and finish",
+    "A consultation, a precision cut shaped to how your hair moves, and a polished blow-dry.",
+    125,
   ],
-  ["Skin fade", "Bald to blended, any height on top."],
-  ["Beard trim and line-up", "Shape, line and condition."],
-  ["Hot towel shave", "Straight-razor shave with hot towels."],
-  ["Kids cut", "For the young ones, 12 and under."],
+  [
+    "Balayage and lived-in color",
+    "Hand-painted brightness that grows out softly, finished with a custom gloss.",
+    325,
+  ],
+  [
+    "Bridal and occasion styling",
+    "Elegant updos and soft waves, with a trial to perfect the look before the day.",
+    250,
+  ],
+  [
+    "Signature facial",
+    "Cleanse, exfoliate, extract and a sculpting massage, with a mask chosen for your skin.",
+    195,
+  ],
+  [
+    "Scalp ritual",
+    "A detoxifying cleanse, gentle exfoliation and a deep scalp massage for healthier hair.",
+    145,
+  ],
+  [
+    "Nail artistry",
+    "Gel manicures, structured overlays and hand-painted detail, with a spa pedicure to match.",
+    65,
+  ],
+  [
+    "Brow and lash design",
+    "Brow shaping, lamination and tint, and lash lifts that open the eyes naturally.",
+    95,
+  ],
+  [
+    "Makeup artistry",
+    "Soft glam or editorial makeup for events, photographs and the wedding party.",
+    175,
+  ],
 ] as const;
 
-// One photo per service, same order (Unsplash License; apps/web/public/am-barber/services/
+// One photo per service, same order (AI-generated; apps/web/public/am-barber/services/
 // CREDITS.md). Uploaded to the media library so the owner can swap them in the builder.
 const SERVICE_PHOTOS = [
-  ["haircut.webp", "A barber cutting a client's hair with scissors"],
-  ["skin-fade.webp", "A barber taking a skin fade down with clippers"],
-  ["beard-trim.webp", "A barber trimming a full beard with scissors"],
-  [
-    "hot-towel-shave.webp",
-    "A client under a hot towel for a straight-razor shave",
-  ],
-  ["kids-cut.webp", "A young boy in the barber's chair after his cut"],
+  ["cut-finish.webp", "A stylist giving a precision haircut with shears"],
+  ["balayage.webp", "A colorist hand-painting balayage onto long hair"],
+  ["bridal.webp", "A bride's low chignon with pearl pins and a soft veil"],
+  ["facial.webp", "A client relaxing during a facial treatment"],
+  ["scalp-ritual.webp", "A client at the basin during a scalp massage"],
+  ["nails.webp", "A manicurist finishing a nude and champagne gel manicure"],
+  ["brows-lashes.webp", "An artist grooming a client's brows"],
+  ["makeup.webp", "A makeup artist applying soft, glowing makeup"],
 ] as const;
 
 function log(line: string): void {
@@ -156,9 +193,9 @@ async function ensureOrg(): Promise<{ orgId: string; ownerId: string }> {
       });
       batch.collection("business_profile").create({
         organization: orgId,
-        business_type: "barbershop",
+        business_type: "hair-salon",
         description:
-          "Barbershop in Grand Prairie, Texas. Cuts, fades, beards and shaves.",
+          "Luxury hair and beauty salon in Grand Prairie, Texas. Cuts, color, bridal, skin, nails, brows and makeup.",
         public_email: CONTACT_EMAIL,
       });
       batch.collection("org_intake").create({
@@ -255,13 +292,13 @@ async function orgRow(
 // ------------------------------------------------------------------ images
 async function ogImage(): Promise<Uint8Array> {
   const logo = await sharp(readFileSync(LOGO))
-    .resize(760, 520, { fit: "contain", background: "#00000000" })
+    .resize(900, 380, { fit: "contain", background: "#00000000" })
     .png()
     .toBuffer();
   const buf = await sharp({
-    create: { width: 1200, height: 630, channels: 3, background: "#0a0a0c" },
+    create: { width: 1200, height: 630, channels: 3, background: "#fbf8f3" },
   })
-    .composite([{ input: logo, top: 55, left: 220 }])
+    .composite([{ input: logo, top: 125, left: 150 }])
     .jpeg({ quality: 88 })
     .toBuffer();
   return new Uint8Array(buf);
@@ -317,28 +354,29 @@ async function main(): Promise<void> {
   // Intake: business facts, services, logo / hero (read by the template).
   await saveBusinessProfile(ctx, {
     org_name: NAME,
-    tagline: "Est. 2020",
-    font_pairing: "bold-clear",
+    tagline: "Hair, color, skin and nails",
+    font_pairing: "warm-classic",
     phone: PHONE,
     public_email: CONTACT_EMAIL,
     address: ADDRESS,
     service_area: "Grand Prairie and the DFW Mid-Cities",
     time_zone: "America/Chicago",
     about:
-      "Superior Salon has been cutting hair on South Carrier Parkway in Grand Prairie since 2020. Classic cuts, sharp fades, clean beards and straight-razor shaves, done right the first time.",
-    mission: "Leave sharper than you came in.",
-    headline: "Sharp cuts. Clean fades. Since 2020.",
+      "Superior Salon is a luxury hair and beauty salon on South Carrier Parkway in Grand Prairie. Precision cuts, lived-in color, bridal styling, skin, nails, brows and makeup, each by a specialist, in a calm, light-filled space.",
+    mission:
+      "Unhurried appointments, honest advice and results that feel like you, only more so.",
+    headline: "Beautiful hair, radiant skin, quietly perfected.",
     legal_name: NAME,
     privacy_contact: CONTACT_EMAIL,
     legal_region: "Texas",
   });
   if ((await listServices(ctx)).length === 0) {
-    for (const [name, description] of SERVICES) {
+    for (const [name, description, from] of SERVICES) {
       await saveService(ctx, {
         name,
         description,
-        price_display: "ask",
-        price_cents: null,
+        price_display: "from",
+        price_cents: from * 100,
         duration_minutes: null,
         is_published: true,
       });
@@ -371,11 +409,21 @@ async function main(): Promise<void> {
   // Moodboard kind: an image row the template never places on a page (only the share card).
   const share = await ensureImage(
     "moodboard",
-    "Superior Salon colour logo on black",
+    "Superior Salon logo on ivory",
     ogImage,
     "share.jpg",
   );
-  log("PASS intake: profile, services, logo, hero, share image");
+  const iconId = await ensureImage(
+    "moodboard",
+    ICON_ALT,
+    async () => new Uint8Array(readFileSync(ICON)),
+    "icon.png",
+  );
+  await regenerateSiteIcons(orgId, {
+    force: true,
+    invalidator: pdeps.invalidator,
+  });
+  log("PASS intake: profile, services, logo, hero, share image, site icon");
 
   if ((await orgRow(orgId)).stage === "intake") {
     const sent = await sendToCds(ctx, ADDON_REGISTRY);
@@ -389,7 +437,7 @@ async function main(): Promise<void> {
   if (!(await listPages(ctx)).some((p) => p.slug === "home")) {
     await assemble(orgId, sections, pdeps);
   }
-  await afterAssembly(ctx, orgId, sections, pdeps, share, heroId);
+  await afterAssembly(ctx, orgId, sections, pdeps, share, heroId, iconId);
 }
 
 async function assemble(
@@ -421,6 +469,7 @@ async function afterAssembly(
   pdeps: PublishDeps,
   share: string,
   heroId: string,
+  iconId: string,
 ): Promise<void> {
   // Builder Pro (free before checkout).
   const addons = await listOrgAddons(ctx);
@@ -436,7 +485,7 @@ async function afterAssembly(
     (
       await createForm(ctx, pdeps, {
         template: "contact",
-        name: "Book a chair",
+        name: "Book an appointment",
       })
     ).form.id;
   const field = (
@@ -459,7 +508,7 @@ async function afterAssembly(
   });
   await saveForm(ctx, pdeps, {
     id: formId,
-    name: "Book a chair",
+    name: "Book an appointment",
     layout: "2",
     fields: [
       field("name", "name", "Name"),
@@ -477,7 +526,7 @@ async function afterAssembly(
     ],
     after_submit: {
       kind: "message",
-      message: `Got it. We'll call or text you to lock in your time. Need it sooner? Call ${PHONE}.`,
+      message: `Thank you. We'll call or text you shortly to confirm your appointment. Need us sooner? Call ${PHONE}.`,
       page: "",
       button_text: "",
     },
@@ -489,14 +538,14 @@ async function afterAssembly(
       steps: [],
       auto_reply: {
         enabled: true,
-        subject: "We got your request",
-        body: `Hi {name},\n\nThanks for reaching out to Superior Salon. We'll get back to you shortly to confirm your time.\n\nNeed us now? Call ${PHONE}.\n2505 S Carrier Pkwy, Grand Prairie, TX 75052\n\nSuperior Salon`,
+        subject: "We received your appointment request",
+        body: `Hi {name},\n\nThank you for choosing Superior Salon. We'll be in touch shortly to confirm your appointment.\n\nNeed us now? Call ${PHONE}.\n2505 S Carrier Pkwy, Grand Prairie, TX 75052\n\nSuperior Salon`,
       },
       routing: [],
       save_resume: false,
     },
   });
-  log(`PASS form ${formId} (Book a chair, auto-reply on)`);
+  log(`PASS form ${formId} (Book an appointment, auto-reply on)`);
 
   // Home hero: the logo alone (the h1 stays for screen readers; am-barber.css hides it).
   const pages = await listPages(ctx);
@@ -529,7 +578,7 @@ async function afterAssembly(
   // The block under the logo: heading, the intro paragraph, then Book Now / Get Directions /
   // More About Us (am-barber.css lays the three out as one equal-width row). Owner-editable
   // in the page builder like any columns block.
-  // Book Now goes to /barbers, where each barber has a Book button.
+  // Book Now goes to /team, where each stylist has a Book button.
   const intro = homeSections.find(
     (s) =>
       s.section_type === "columns" &&
@@ -557,14 +606,14 @@ async function afterAssembly(
         ...keep("heading"),
         kind: "heading",
         level: 2,
-        text: "Sharp cuts. Clean fades. Est. 2020.",
+        text: "Beautiful hair, radiant skin, quietly perfected.",
       },
       {
         ...keep("text"),
         kind: "text",
-        html: "<p>Superior Salon has been cutting hair on South Carrier Parkway in Grand Prairie since 2020. Classic cuts, sharp fades, clean beards and straight-razor shaves, done right the first time.</p>",
+        html: "<p>Superior Salon is a luxury hair and beauty salon on South Carrier Parkway in Grand Prairie. Precision cuts, lived-in color, bridal styling, skin, nails, brows and makeup, each by a specialist, in a calm, light-filled space.</p>",
       },
-      button(1, "Book Now", "/barbers", "primary"),
+      button(1, "Book Now", "/team", "primary"),
       button(2, "Get Directions", DIRECTIONS, "secondary"),
       button(3, "More About Us", "/about", "secondary"),
     ];
@@ -590,7 +639,7 @@ async function afterAssembly(
     row_layout: "full",
     content: {
       heading: "Services",
-      text: `<p>Walk in or call ahead: ${PHONE}. Ask about prices in the shop.</p>`,
+      text: `<p>By appointment. Book online with your stylist, or call ${PHONE}. Prices start from the amounts shown and are confirmed at your consultation.</p>`,
     },
   };
   const current = await listSections(ctx, home.id);
@@ -607,7 +656,7 @@ async function afterAssembly(
   after = headRow.id;
   const svcCols: { id: string; items: Record<string, unknown>[] }[] = [];
   for (let n = 0; n < SERVICES.length; n++) {
-    const [name, description] = SERVICES[n]!;
+    const [name, description, from] = SERVICES[n]!;
     const [file, alt] = SERVICE_PHOTOS[n]!;
     const asset =
       gallery.find((m) => m.alt === alt)?.id ??
@@ -629,7 +678,7 @@ async function afterAssembly(
         {
           id: svcId(n, 5),
           kind: "text",
-          html: `<p>${description}</p><p><strong>Ask for a price</strong></p>`,
+          html: `<p>${description}</p><p><strong>From $${from}</strong></p>`,
         },
       ],
     });
@@ -672,9 +721,10 @@ async function afterAssembly(
 
   await updatePage(ctx, home.id, {
     seo: {
-      meta_title: "Superior Salon | Barbershop in Grand Prairie, TX",
+      meta_title:
+        "Superior Salon | Luxury Hair and Beauty Salon in Grand Prairie, TX",
       meta_description:
-        "Haircuts, skin fades, beard trims and hot towel shaves at 2505 S Carrier Pkwy, Grand Prairie, TX. Call (214) 518-6852. Est. 2020.",
+        "Precision cuts, balayage, bridal styling, facials, nails, brows and makeup at 2505 S Carrier Pkwy, Grand Prairie, TX. Call (214) 518-6852.",
       share_image: share,
     },
   });
@@ -698,8 +748,8 @@ async function afterAssembly(
       section_type: "text-only",
       row_layout: "full",
       content: {
-        heading: "Book a chair",
-        text: `<p>Tell us what you need and when. We'll call or text to confirm. In a hurry? <a href="${TEL}">Call ${PHONE}</a>.</p><p>2505 S Carrier Pkwy, Grand Prairie, TX 75052 · <a href="${DIRECTIONS}">Get directions</a> · <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>`,
+        heading: "Book an appointment",
+        text: `<p>Tell us what you'd like and when. We'll call or text to confirm. In a hurry? <a href="${TEL}">Call ${PHONE}</a>.</p><p>2505 S Carrier Pkwy, Grand Prairie, TX 75052 · <a href="${DIRECTIONS}">Get directions</a> · <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>`,
       },
     },
     ...copy.map((s) => ({
@@ -723,7 +773,7 @@ async function afterAssembly(
     seo: {
       meta_title: "Contact Superior Salon | Grand Prairie, TX",
       meta_description:
-        "Book a chair at Superior Salon, 2505 S Carrier Pkwy, Grand Prairie, TX 75052. Call (214) 518-6852.",
+        "Book an appointment at Superior Salon, 2505 S Carrier Pkwy, Grand Prairie, TX 75052. Call (214) 518-6852.",
     },
   });
   const cRes = await publishPage(ctx, contact.id, pdeps);
@@ -743,7 +793,12 @@ async function afterAssembly(
   let retired = 0;
   for (const kind of ["logo", "hero", "moodboard"] as const) {
     for (const m of await listMedia(ctx, kind)) {
-      if (m.id !== heroId && m.id !== share && m.alt !== LOGO_ALT) {
+      if (
+        m.id !== heroId &&
+        m.id !== share &&
+        m.id !== iconId &&
+        m.alt !== LOGO_ALT
+      ) {
         await removeMedia(ctx, m.id, { invalidator: pdeps.invalidator });
         retired++;
       }

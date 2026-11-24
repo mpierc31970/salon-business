@@ -85,7 +85,7 @@ export async function POST(req: Request): Promise<Response> {
   if (form.get("target") === "main") {
     const to = "/hub/gallery";
     if (!isStudioManager(ctx))
-      return back(req, to, "error", "Only the shop owner can do this.");
+      return back(req, to, "error", "Only the salon owner can do this.");
     const file = form.get("file");
     if (!(file instanceof Blob) || file.size === 0)
       return back(req, to, "error", UPLOAD_COPY.type);

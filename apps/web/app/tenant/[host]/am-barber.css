@@ -1,72 +1,62 @@
 /*
- * Superior Salon: site-scoped finish (hexagon badges + red/blue neon; pictures stay square). Everything here is
- * scoped to [data-site="am-barber"] (SiteThemeScope's site key), so the hub and theme
- * previews never pick it up. Colours come from the theme tokens (the am-barber theme);
- * the only literals are the two neon tubes and the deep button red.
- *
- * Contrast: the theme's primary (neon red) passes as link text on black but cannot also carry
- * white text (no red does both, WCAG AA). Filled red surfaces (buttons, banner) use the deeper
- * --am-red-fill with white (5.9:1); links keep the brighter token.
+ * Superior Salon: site-scoped finish (Ivory Atelier: ivory grounds, ink type, champagne
+ * hairlines; pictures stay plain rectangles). Everything here is scoped to
+ * [data-site="am-barber"] (SiteThemeScope's site key), so the hub and theme previews never
+ * pick it up. Colours come from the theme tokens (the am-barber theme); the only literal is
+ * the champagne line, which never sits behind text.
  */
 [data-site="am-barber"] {
+  --am-champagne: #a8875a;
   --am-white: #fff;
   --am-black: #000;
-  --am-red-glow: #ff2a33;
-  --am-blue-glow: #2f6bff;
-  --am-red-fill: #c8161d;
-  --am-red-fill-hover: #a80f15;
-  --am-hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  --site-radius-button: 0px;
-  --site-radius-media: 0px;
-  --site-focus: var(--am-blue-glow);
-  color-scheme: dark;
+  --site-radius-button: 2px;
+  --site-radius-media: 2px;
+  --site-focus: var(--am-champagne);
+  color-scheme: light;
   scrollbar-color: var(--site-border) var(--site-surface);
 }
 
 [data-site="am-barber"] ::selection {
-  background: var(--am-red-fill);
-  color: var(--am-white);
+  background: var(--site-surface-raised);
+  color: var(--site-text);
 }
 
-/* ---- Type: heavy, square, condensed feel ---- */
+/* ---- Type: a fine serif, set light, with room to breathe ---- */
 [data-site="am-barber"] h1,
 [data-site="am-barber"] h2 {
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.1;
 }
 [data-site="am-barber"] h3 {
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  letter-spacing: 0.005em;
 }
 
-/* Section badge: a small red hexagon with a blue halo before every section heading. */
+/* Section mark: a short champagne rule above every section heading. */
 [data-site="am-barber"] main h2::before {
   content: "";
-  display: inline-block;
-  width: 0.5em;
-  height: 0.5em;
-  margin-right: 0.4em;
-  vertical-align: 0.12em;
-  background: var(--am-red-glow);
-  clip-path: var(--am-hex);
-  filter: drop-shadow(0 0 6px var(--am-blue-glow));
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  margin-bottom: 0.6em;
+  background: var(--am-champagne);
+}
+[data-site="am-barber"] main .text-center h2::before,
+[data-site="am-barber"] main h2.text-center::before {
+  margin-inline: auto;
 }
 
-/* ---- Header: a quiet light-gray rule along the bottom edge ---- */
+/* ---- Header: a quiet hairline along the bottom edge ---- */
 [data-site="am-barber"] [data-site-header] {
-  border-bottom-color: color-mix(in srgb, var(--site-text) 22%, transparent);
+  border-bottom-color: var(--site-border);
   position: relative;
   z-index: 1;
 }
 
 /* ---- Front-page hero: the logo alone, centred on the first screen ----
  * Scoped to the hero (the first section with an h1 and a hero image). The h1 stays in the
- * markup for screen readers and search, visually hidden. Behind the logo: a loose honeycomb
- * of same-size hexagon outlines (one inline SVG, centred, thin gray) and the logo's own
- * neon spilling onto the wall, red behind the A, blue behind the M, tinting the lines near it. */
+ * markup for screen readers and search, visually hidden. Behind the logo: a soft linen wash. */
 [data-site="am-barber"]
   main
   > section:first-child:has(h1):has(.order-first img) {
@@ -75,7 +65,12 @@
   overflow: hidden;
   display: grid;
   align-items: center;
-  min-height: min(calc(100svh - 81px), 52rem);
+  min-height: min(calc(100svh - 81px), 46rem);
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    var(--site-surface-raised),
+    var(--site-surface) 70%
+  );
 }
 /* Tall or portrait screens (tablets, phones): no vertical centring in a tall box; the logo
  * sits near the top and the next section starts right after it. */
@@ -85,24 +80,8 @@
     > section:first-child:has(h1):has(.order-first img) {
     min-height: 0;
     align-items: start;
-    padding-block: clamp(1.5rem, 6vh, 4rem);
+    padding-block: clamp(2rem, 8vh, 5rem);
   }
-}
-[data-site="am-barber"]
-  main
-  > section:first-child:has(h1):has(.order-first img)::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  z-index: -2;
-  width: min(96vw, 980px);
-  aspect-ratio: 423 / 284;
-  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20423%20284%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23c8c8d0%22%20stroke-width%3D%222%22%20vector-effect%3D%22non-scaling-stroke%22%3E%3Cpolygon%20points%3D%22118.9%2C7.0%20153.6%2C27.0%20153.6%2C67.0%20118.9%2C87.0%2084.3%2C67.0%2084.3%2C27.0%22%2F%3E%3Cpolygon%20points%3D%22193.3%2C7.0%20227.9%2C27.0%20227.9%2C67.0%20193.3%2C87.0%20158.6%2C67.0%20158.6%2C27.0%22%2F%3E%3Cpolygon%20points%3D%22345.9%2C4.0%20380.5%2C24.0%20380.5%2C64.0%20345.9%2C84.0%20311.2%2C64.0%20311.2%2C24.0%22%2F%3E%3Cpolygon%20points%3D%2281.8%2C71.3%20116.4%2C91.3%20116.4%2C131.3%2081.8%2C151.3%2047.2%2C131.3%2047.2%2C91.3%22%2F%3E%3Cpolygon%20points%3D%22156.1%2C71.3%20190.7%2C91.3%20190.7%2C131.3%20156.1%2C151.3%20121.5%2C131.3%20121.5%2C91.3%22%2F%3E%3Cpolygon%20points%3D%22230.4%2C71.3%20265.0%2C91.3%20265.0%2C131.3%20230.4%2C151.3%20195.8%2C131.3%20195.8%2C91.3%22%2F%3E%3Cpolygon%20points%3D%22304.7%2C71.3%20339.3%2C91.3%20339.3%2C131.3%20304.7%2C151.3%20270.1%2C131.3%20270.1%2C91.3%22%2F%3E%3Cpolygon%20points%3D%22115.9%2C137.7%20150.6%2C157.7%20150.6%2C197.7%20115.9%2C217.7%2081.3%2C197.7%2081.3%2C157.7%22%2F%3E%3Cpolygon%20points%3D%22267.6%2C135.7%20302.2%2C155.7%20302.2%2C195.7%20267.6%2C215.7%20232.9%2C195.7%20232.9%2C155.7%22%2F%3E%3Cpolygon%20points%3D%22341.9%2C135.7%20376.5%2C155.7%20376.5%2C195.7%20341.9%2C215.7%20307.2%2C195.7%20307.2%2C155.7%22%2F%3E%3Cpolygon%20points%3D%22230.4%2C200.0%20265.0%2C220.0%20265.0%2C260.0%20230.4%2C280.0%20195.8%2C260.0%20195.8%2C220.0%22%2F%3E%3Cpolygon%20points%3D%22384.0%2C75.3%20418.7%2C95.3%20418.7%2C135.3%20384.0%2C155.3%20349.4%2C135.3%20349.4%2C95.3%22%2F%3E%3Cpolygon%20points%3D%2238.6%2C138.7%2073.3%2C158.7%2073.3%2C198.7%2038.6%2C218.7%204.0%2C198.7%204.0%2C158.7%22%2F%3E%3Cpolygon%20points%3D%22379.0%2C200.0%20413.7%2C220.0%20413.7%2C260.0%20379.0%2C280.0%20344.4%2C260.0%20344.4%2C220.0%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E")
-    center / contain no-repeat;
-  opacity: 0.2;
-  pointer-events: none;
 }
 [data-site="am-barber"]
   main
@@ -126,51 +105,14 @@
 [data-site="am-barber"]
   main
   > section:first-child:has(h1):has(.order-first img)
-  .order-first {
-  position: relative;
-}
-/* The neon spill: above the lattice (so it tints it), behind the logo. */
-[data-site="am-barber"]
-  main
-  > section:first-child:has(h1):has(.order-first img)
-  .order-first::before {
-  content: "";
-  position: absolute;
-  inset: -22% -30%;
-  z-index: -1;
-  background:
-    radial-gradient(
-      closest-side at 30% 46%,
-      color-mix(in srgb, var(--am-red-glow) 36%, transparent),
-      transparent
-    ),
-    radial-gradient(
-      closest-side at 70% 46%,
-      color-mix(in srgb, var(--am-blue-glow) 36%, transparent),
-      transparent
-    );
-  filter: blur(30px);
-  pointer-events: none;
-}
-[data-site="am-barber"]
-  main
-  > section:first-child:has(h1):has(.order-first img)
   .order-first
   img {
   width: auto;
-  max-width: min(88vw, 760px);
-  max-height: calc(100svh - 220px);
+  max-width: min(84vw, 680px);
+  max-height: calc(100svh - 240px);
   margin-inline: auto;
   clip-path: none;
-  filter: drop-shadow(
-      0 0 2px color-mix(in srgb, var(--am-white) 25%, transparent)
-    )
-    drop-shadow(
-      0 0 18px color-mix(in srgb, var(--am-red-glow) 30%, transparent)
-    )
-    drop-shadow(
-      0 0 30px color-mix(in srgb, var(--am-blue-glow) 25%, transparent)
-    );
+  border-radius: 0;
 }
 
 /* ---- The block under the hero: full-width copy, buttons in one equal row ----
@@ -222,8 +164,8 @@
 }
 
 /* ---- Photo rows: a column holding just one image ----
- * The image is a plain square-cornered rectangle (no frame, no cut; owner rule: pictures
- * stay square), and the text beside it centres on it. Stacks on phones with the grid. */
+ * The image is a plain rectangle (no frame, no cut), and the text beside it centres on it.
+ * Stacks on phones with the grid. */
 [data-site="am-barber"] main .grid:has(> [data-column] > img:only-child) {
   align-items: center;
   column-gap: clamp(24px, 4vw, 56px);
@@ -252,73 +194,60 @@
   [data-column]
   > img.rounded-site-media:first-child:not(:only-child) {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
   object-position: center;
 }
 
-/* ---- Buttons: deep red fill, light label, red glow ---- */
-[data-site="am-barber"] .bg-site-primary {
-  --site-primary-contrast: var(--am-white);
-  background-color: var(--am-red-fill);
-  color: var(--am-white);
-}
+/* ---- Buttons: bronze fill, tracked small-caps label, no glow ---- */
 [data-site="am-barber"] a.bg-site-primary,
-[data-site="am-barber"] button.bg-site-primary {
+[data-site="am-barber"] button.bg-site-primary,
+[data-site="am-barber"] a.border-site-text:not([href^="mailto:"]) {
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--am-red-glow) 90%, transparent),
-    0 0 18px color-mix(in srgb, var(--am-red-glow) 55%, transparent);
+  letter-spacing: 0.14em;
+  font-size: 0.875rem;
+  font-weight: 500;
   transition:
-    background-color 160ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 160ms cubic-bezier(0.22, 1, 0.36, 1);
+    background-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 [data-site="am-barber"] a.bg-site-primary:hover,
 [data-site="am-barber"] button.bg-site-primary:hover {
-  background-color: var(--am-red-fill-hover);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--am-red-glow) 100%, transparent),
-    0 0 26px color-mix(in srgb, var(--am-red-glow) 75%, transparent),
-    0 0 40px color-mix(in srgb, var(--am-blue-glow) 35%, transparent);
-}
-[data-site="am-barber"] a.border-site-text:not([href^="mailto:"]) {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  background-color: color-mix(
+    in srgb,
+    var(--site-primary) 86%,
+    var(--am-black)
+  );
 }
 [data-site="am-barber"] a.border-site-text:hover {
-  border-color: var(--am-blue-glow);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--am-blue-glow) 45%, transparent);
+  border-color: var(--site-primary);
+  color: var(--site-primary);
 }
 
-/* The banner sits on a red ground: its ring turns white. */
-[data-site="am-barber"] [data-site-banner] {
-  --site-focus: var(--am-white);
-}
-
-/* Form fields: dark wells, blue focus. */
+/* Form fields: porcelain wells on the ivory page, champagne focus. */
 [data-site="am-barber"] input:not([type="hidden"]),
 [data-site="am-barber"] select,
 [data-site="am-barber"] textarea {
-  background-color: var(--site-surface);
+  background-color: var(--am-white);
   color: var(--site-text);
-  border-radius: 0;
+  border-radius: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-site="am-barber"] a.bg-site-primary,
-  [data-site="am-barber"] button.bg-site-primary {
+  [data-site="am-barber"] button.bg-site-primary,
+  [data-site="am-barber"] a.border-site-text {
     transition: none;
   }
 }
 
 /* ---- Phone menu drawer (NavDisclosure <dialog>): slides in from the right ---- */
 [data-site="am-barber"] dialog[data-site-menu][open] {
-  animation: am-drawer-in 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: am-drawer-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* The theme's backdrop is light text at 55%: on this dark site the menu dims to black. */
 [data-site="am-barber"] dialog[data-site-menu]::backdrop {
-  background: color-mix(in srgb, var(--am-black) 70%, transparent);
+  background: color-mix(in srgb, var(--site-text) 35%, transparent);
 }
 @keyframes am-drawer-in {
   from {
@@ -340,8 +269,8 @@
   overflow-wrap: anywhere;
 }
 
-/* Phone menu rows: a soft gradient instead of the focus box; the current page gets a red
- * hexagon instead of the underline. */
+/* Phone menu rows: a soft linen wash instead of the focus box; the current page gets a
+ * champagne rule instead of the underline. */
 [data-site="am-barber"] dialog[data-site-menu] nav a {
   margin-inline: -0.75rem;
   padding-inline: 0.75rem;
@@ -351,11 +280,7 @@
 [data-site="am-barber"] dialog[data-site-menu] nav a:focus-visible,
 [data-site="am-barber"] dialog[data-site-menu] nav a[aria-current="page"] {
   outline: none;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--site-text) 16%, transparent),
-    transparent
-  );
+  background: linear-gradient(90deg, var(--site-surface-raised), transparent);
 }
 [data-site="am-barber"]
   dialog[data-site-menu]
@@ -363,9 +288,8 @@
   a[aria-current="page"]::before {
   content: "";
   flex: none;
-  width: 0.6em;
-  height: 0.6em;
+  width: 1rem;
+  height: 1px;
   margin-right: 0.6em;
-  background: var(--am-red-glow);
-  clip-path: var(--am-hex);
+  background: var(--am-champagne);
 }

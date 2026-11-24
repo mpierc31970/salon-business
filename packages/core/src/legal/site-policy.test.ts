@@ -310,7 +310,7 @@ describe("renderSitePolicy terms", () => {
     expect(r.html).toMatch(/Report link[^.]*anyone[^.]*report/i);
     const v3 = renderSitePolicy("terms", facts(), 3);
     expect(v3.html).not.toContain("Report link");
-    expect(v3.html).toContain("mailto:pierce1970+BarberOwner@gmail.com");
+    expect(v3.html).toContain("mailto:matthew@metaphysicalevents.com");
     expect(r.html).not.toContain("<script");
     expect(r.html).not.toMatch(/<h[14-6][\s>]/);
   });

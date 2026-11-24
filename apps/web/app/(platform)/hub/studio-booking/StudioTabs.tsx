@@ -16,7 +16,7 @@ export function StudioTabs({
   const tabs = [
     {
       id: "barbers",
-      label: manager ? "Barbers" : "My page",
+      label: manager ? "Team" : "My page",
       href: STUDIO_BASE,
     },
     {

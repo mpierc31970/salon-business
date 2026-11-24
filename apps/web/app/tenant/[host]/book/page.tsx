@@ -14,14 +14,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { siteForRequest } from "../../../../lib/tenant";
-import { MUTED, minutes, money, Portrait } from "../barbers/BarberViews";
+import { MUTED, minutes, money, Portrait } from "../team/BarberViews";
 import { FocusAlert } from "./FocusAlert";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Book a chair",
-  description: "Pick your barber, your service and an open time.",
+  title: "Book an appointment",
+  description: "Pick your stylist, your service and an open time.",
   robots: { index: true, follow: true },
 };
 
@@ -31,9 +31,9 @@ type Props = { params: Promise<{ host: string }>; searchParams?: Promise<SP> };
 const ERRORS: Record<string, string> = {
   taken: "That time was just taken. Pick another time.",
   input: "Check your name and email, then try again.",
-  rate: "Too many bookings from this device. Call the shop to book.",
+  rate: "Too many bookings from this device. Call the salon to book.",
   failed:
-    "Something went wrong and you're not booked yet. Try again or call the shop.",
+    "Something went wrong and you're not booked yet. Try again or call the salon.",
 };
 
 function one(v: string | string[] | undefined): string {
@@ -130,8 +130,8 @@ export default async function BookPage({ params, searchParams }: Props) {
             {one(sp.b)} · {one(sp.s)} · {one(sp.w)}
           </p>
           <p className={MUTED}>
-            Request sent — your barber will confirm. Booking {booked}. We
-            emailed you the details and will email again once your barber
+            Request sent — your stylist will confirm. Booking {booked}. We
+            emailed you the details and will email again once your stylist
             confirms.
           </p>
           <div>
@@ -176,19 +176,19 @@ export default async function BookPage({ params, searchParams }: Props) {
   return (
     <main id="content" tabIndex={-1} className="outline-none" data-book-page="">
       <PageTitleHeader
-        title={seat ? `Book with ${seat.name}` : "Book a chair"}
+        title={seat ? `Book with ${seat.name}` : "Book an appointment"}
       />
       <div className="mx-auto flex max-w-[1120px] flex-col gap-10 px-6 pb-16 md:px-8">
         {error && !taken ? (
           <FocusAlert className={ALERT}>{error}</FocusAlert>
         ) : null}
 
-        <Step n={1} title={seat ? "Your barber" : "Pick your barber"}>
+        <Step n={1} title={seat ? "Your stylist" : "Pick your stylist"}>
           {seat ? (
             <div className="flex flex-col gap-3">
               <div>
                 <Link
-                  href="/barbers"
+                  href="/team"
                   className="inline-flex min-h-11 items-center gap-2 font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--site-focus)]"
                 >
                   <ArrowLeft size={20} aria-hidden="true" focusable="false" />
@@ -204,7 +204,7 @@ export default async function BookPage({ params, searchParams }: Props) {
               </div>
               <div>
                 <Link
-                  href={`/barbers/${seat.slug}`}
+                  href={`/team/${seat.slug}`}
                   className={siteButtonClasses("secondary")}
                 >
                   View {seat.name}&apos;s profile
@@ -213,7 +213,7 @@ export default async function BookPage({ params, searchParams }: Props) {
             </div>
           ) : seats.length === 0 ? (
             <p className={MUTED}>
-              Online booking opens soon. Call the shop to book.
+              Online booking opens soon. Call the salon to book.
             </p>
           ) : (
             <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -237,7 +237,7 @@ export default async function BookPage({ params, searchParams }: Props) {
           <Step n={2} title={`Pick a service with ${seat.name}`}>
             {seat.services.length === 0 ? (
               <p className={MUTED}>
-                {seat.name} hasn&apos;t listed services yet. Call the shop.
+                {seat.name} hasn&apos;t listed services yet. Call the salon.
               </p>
             ) : (
               <ul className="flex flex-col divide-y divide-site-border border-y border-site-border">
@@ -271,12 +271,12 @@ export default async function BookPage({ params, searchParams }: Props) {
             {taken ? <FocusAlert className={ALERT}>{taken}</FocusAlert> : null}
             {!avail ? (
               <p className={MUTED}>
-                Times couldn&apos;t load. Refresh, or call the shop.
+                Times couldn&apos;t load. Refresh, or call the salon.
               </p>
             ) : avail.days.every((d) => !d.open) ? (
               <p className={MUTED}>
                 {seat.name} has no open times in the next month. Pick another
-                barber or call the shop.
+                stylist or call the salon.
               </p>
             ) : (
               <div className="grid gap-8 md:grid-cols-2">
@@ -437,7 +437,7 @@ export default async function BookPage({ params, searchParams }: Props) {
                 />
               </label>
               <p className={`text-sm ${MUTED}`}>
-                Pay in the shop. Your barber confirms the time by email.
+                Pay at the salon. Your stylist confirms the time by email.
               </p>
               <div>
                 <button type="submit" className={siteButtonClasses("primary")}>

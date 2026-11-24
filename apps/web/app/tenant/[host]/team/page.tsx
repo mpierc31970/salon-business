@@ -1,6 +1,6 @@
-// /barbers on tenant hosts: every published barber (Studio Booking). Server-rendered under
+// /team on tenant hosts: every published stylist (Studio Booking). Server-rendered under
 // the site chrome; reads only listPublicSeats (published seats, allowlisted fields). A failed
-// read renders an empty state, never a 500. A static route: "barbers" is a reserved slug.
+// read renders an empty state, never a 500. A static route: "team" is a reserved slug.
 import { listPublicSeats, type PublicSeat } from "@cds/db";
 import { PageTitleHeader } from "@cds/ui/site";
 import type { Metadata } from "next";
@@ -10,8 +10,9 @@ import { BarberCard, MUTED } from "./BarberViews";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Our barbers",
-  description: "Meet the barbers and book a chair with the one you want.",
+  title: "Our team",
+  description:
+    "Meet our stylists and specialists, and book with the one you want.",
 };
 
 type Props = { params: Promise<{ host: string }> };
@@ -32,11 +33,11 @@ export default async function BarbersPage({ params }: Props) {
       className="outline-none"
       data-barbers-page=""
     >
-      <PageTitleHeader title="Our barbers" />
+      <PageTitleHeader title="Our team" />
       <div className="mx-auto max-w-[1120px] px-6 pb-16 md:px-8">
         {seats.length === 0 ? (
           <p className={MUTED}>
-            Our barbers will be listed here soon. Call us to book.
+            Our team will be listed here soon. Call us to book.
           </p>
         ) : (
           <ul className="flex flex-wrap justify-center gap-8">

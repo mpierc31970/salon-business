@@ -1,40 +1,40 @@
 ---
-name: Night Shift
-description: "Superior Salon. A late-night barbershop window: black glass, one red neon sign, one blue, cut into hexagons."
+name: Ivory Atelier
+description: "Superior Salon. A light-filled couture salon: ivory walls, warm cream linen, deep ink type, one champagne line of brass."
 colors:
-  black-glass: "#0A0A0C"
-  steel-chair: "#141418"
-  chrome-white: "#F2F2F2"
-  smoke: "#9A9AA3"
-  neon-red: "#E0242B"
-  sign-white: "#FFFFFF"
-  pole-blue: "#2F6BFF"
-  seam: "#26262C"
+  ivory: "#FBF8F3"
+  linen: "#F3EDE4"
+  ink: "#2B2724"
+  taupe: "#675E55"
+  bronze: "#7A5D3C"
+  porcelain: "#FFFFFF"
+  champagne: "#8F7048"
+  seam: "#E3D9CB"
 typography:
   display:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "Fraunces, Georgia, serif"
     fontSize: "clamp(2.25rem, 4vw + 1rem, 4rem)"
-    fontWeight: 900
-    lineHeight: 0.95
+    fontWeight: 400
+    lineHeight: 1.05
     letterSpacing: "-0.01em"
   heading:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "Fraunces, Georgia, serif"
     fontSize: "clamp(1.75rem, 2vw + 1rem, 2.5rem)"
-    fontWeight: 800
-    lineHeight: 1.05
+    fontWeight: 400
+    lineHeight: 1.15
   subhead:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "Fraunces, Georgia, serif"
     fontSize: "24px"
-    fontWeight: 800
-    lineHeight: 1.2
+    fontWeight: 400
+    lineHeight: 1.25
   body:
-    fontFamily: "Public Sans, system-ui, sans-serif"
+    fontFamily: "Instrument Sans, system-ui, sans-serif"
     fontSize: "18px"
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.65
 rounded:
-  sm: "0px"
-  md: "0px"
+  sm: "2px"
+  md: "2px"
 spacing:
   xs: "4px"
   sm: "8px"
@@ -45,73 +45,72 @@ spacing:
   3xl: "64px"
 components:
   button-primary:
-    backgroundColor: "{colors.neon-red}"
-    textColor: "{colors.sign-white}"
+    backgroundColor: "{colors.bronze}"
+    textColor: "{colors.porcelain}"
     typography: "{typography.body}"
     rounded: "{rounded.sm}"
-    padding: "12px 28px"
+    padding: "12px 32px"
     height: "52px"
   button-secondary:
-    textColor: "{colors.chrome-white}"
+    textColor: "{colors.ink}"
     typography: "{typography.body}"
     rounded: "{rounded.sm}"
-    padding: "12px 28px"
+    padding: "12px 32px"
     height: "52px"
 ---
 
-# Design System: Night Shift
+# Design System: Ivory Atelier
 
 ## Overview
 
-**Creative North Star: "The Window at 10 p.m."**
+**Creative North Star: "The Atelier at Ten in the Morning."**
 
-A barbershop seen from the street after dark: black glass, a red neon sign that says the
-chair is open, a blue tube along the edge, chrome and steel inside. The page is heavy,
-square and loud where it counts, quiet everywhere else. The hexagon from the shop's ceiling lights
-is the one shape that repeats.
+A couture salon in soft daylight: ivory walls, cream linen, a brass mirror frame, deep ink
+type. The page is calm, airy and easy to read. Luxury comes from space, a fine serif and one
+quiet champagne line, never from decoration.
 
 **Key Characteristics:**
 
-- Near-black grounds, chrome-white type, one red for action, one blue for edges.
-- Archivo at 800-900 for every heading, Public Sans for reading text.
-- Square corners everywhere. Hexagon cuts on photos, team portraits and badges.
-- Neon glow only on the hero heading and the primary button.
+- Ivory and linen grounds, deep ink text, one bronze for action, champagne for fine lines.
+- Fraunces at 400 for every heading, Instrument Sans for reading text.
+- Near-square corners (2px). Hairline champagne rules; generous white space.
+- No glow, no gradients, no heavy shadows.
 
 ## Colors
 
 ### Primary
 
-- **Neon Red** (#E0242B): primary buttons, links, the banner. It means "book / call / go".
+- **Bronze** (#7A5D3C): primary buttons, links, the banner. It means "book / call / go".
 
 ### Tertiary
 
-- **Pole Blue** (#2F6BFF): the accent. Focus rings, hover edges, the second glow tube.
+- **Champagne** (#8F7048): the accent. Hairlines, section marks, focus rings, hover edges.
 
 ### Neutral
 
-- **Black Glass** (#0A0A0C): the page.
-- **Steel Chair** (#141418): alternate bands and cards.
-- **Chrome White** (#F2F2F2): headings and body text.
-- **Smoke** (#9A9AA3): captions, trust lines, labels.
-- **Sign White** (#FFFFFF): text on Neon Red.
-- **Seam** (#26262C): hairline dividers only.
+- **Ivory** (#FBF8F3): the page.
+- **Linen** (#F3EDE4): alternate bands and cards.
+- **Ink** (#2B2724): headings and body text.
+- **Taupe** (#675E55): captions, trust lines, labels.
+- **Porcelain** (#FFFFFF): text on Bronze.
+- **Seam** (#E3D9CB): hairline dividers only.
 
 ### Named Rules
 
-**The Two Tubes Rule.** Red and blue are the only colours with light in them. Nothing else
-glows.
+**The One Line of Brass Rule.** Champagne appears as thin lines and small marks only, never
+as a fill behind text.
 
 ## Typography
 
-**Display Font:** Archivo (900, uppercase hero)
-**Body Font:** Public Sans
+**Display Font:** Fraunces (400, high optical size)
+**Body Font:** Instrument Sans
 
 ### Hierarchy
 
-- **Display** (900, clamp(2.25rem, 4vw + 1rem, 4rem), 0.95): the hero heading only.
-- **Headline** (800, clamp(1.75rem, 2vw + 1rem, 2.5rem), 1.05): section headings.
-- **Title** (800, 24px, 1.2): card and column titles.
-- **Body** (400, 18px, 1.6): reading text, capped at 68ch.
+- **Display** (400, clamp(2.25rem, 4vw + 1rem, 4rem), 1.05): the hero heading only.
+- **Headline** (400, clamp(1.75rem, 2vw + 1rem, 2.5rem), 1.15): section headings.
+- **Title** (400, 24px, 1.25): card and column titles.
+- **Body** (400, 18px, 1.65): reading text, capped at 68ch.
 
 ## Layout
 
@@ -119,32 +118,31 @@ Layout belongs to the platform. Every block is full width; only the columns bloc
 
 ## Elevation & Depth
 
-Flat. Depth comes from the two black tones and the neon light, never from soft shadows.
+Flat. Depth comes from the two light grounds and hairlines, never from heavy shadows.
 
 ## Shapes
 
-Radius 0. Media, team photos and section badges are cut as hexagons (clip-path). Dividers
-are 1px Seam hairlines.
+Radius 2px. Photos are plain rectangles. Dividers are 1px Seam hairlines; section marks are a
+short champagne rule.
 
 ## Components
 
 ### Buttons
 
-- **Primary:** Neon Red fill, Sign White label, 52px tall, square, a red glow that steadies
-  on hover.
-- **Secondary:** transparent with a 1px Chrome White border; hover fills with Steel Chair.
-- **Focus:** a 2px Pole Blue ring with a 2px offset.
+- **Primary:** Bronze fill, Porcelain label in tracked small caps, 52px tall.
+- **Secondary:** transparent with a 1px Ink border; hover fills with Linen.
+- **Focus:** a 2px Champagne ring with a 2px offset.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** keep Black Glass (#0A0A0C) as the ground for most of every page.
-- **Do** keep Neon Red (#E0242B) for things a visitor can press.
-- **Do** respect reduced motion: glow is static, nothing flickers.
+- **Do** keep Ivory (#FBF8F3) as the ground for most of every page.
+- **Do** keep Bronze (#7A5D3C) for things a visitor can press.
+- **Do** leave room: white space is the luxury.
 
 ### Don't:
 
-- **Don't** round corners.
-- **Don't** add glow to body text, cards or bands.
-- **Don't** use gradients on text.
+- **Don't** put text on Champagne.
+- **Don't** add glow, gradients or drop shadows to text.
+- **Don't** use more than one serif weight on a page.

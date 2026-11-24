@@ -20,7 +20,7 @@ import { readStudioNote, seatHref } from "../../../../lib/studio";
 import { GuardedLink } from "../GuardedLink";
 import { StudioTabs } from "./StudioTabs";
 
-export const metadata: Metadata = { title: "Barbers" };
+export const metadata: Metadata = { title: "Team" };
 export const dynamic = "force-dynamic";
 
 const KIND_OPTIONS = [
@@ -41,7 +41,7 @@ export default async function StudioBookingPage() {
   return (
     <div className="flex w-full max-w-[880px] flex-col gap-8 font-hub text-hub-ink">
       <ScreenHeader
-        title="Barbers"
+        title="Team"
         helpId="addon-studio-booking"
         LinkComponent={GuardedLink}
       />
@@ -54,7 +54,7 @@ export default async function StudioBookingPage() {
       {!manager ? (
         <EmptyState
           heading="Your seat isn't set up yet"
-          body="Ask the shop owner to add you with the email you signed in with."
+          body="Ask the salon owner to add you with the email you signed in with."
         />
       ) : (
         <>
@@ -64,7 +64,7 @@ export default async function StudioBookingPage() {
             </h2>
             {seats.length === 0 ? (
               <p className="text-hub-ink-muted">
-                No barbers yet. Add the first one below.
+                No stylists yet. Add the first one below.
               </p>
             ) : (
               <ul className="divide-y divide-hub-border rounded border border-hub-border bg-hub-surface">
@@ -108,7 +108,7 @@ export default async function StudioBookingPage() {
           </section>
           <section aria-labelledby="add-h" className="flex flex-col gap-3">
             <h2 id="add-h" className="text-xl font-semibold">
-              Add a barber
+              Add a stylist
             </h2>
             <form
               action={addSeatAction}
@@ -138,21 +138,21 @@ export default async function StudioBookingPage() {
               />
               <div className="flex items-end">
                 <Button type="submit" variant="primary">
-                  Add barber
+                  Add stylist
                 </Button>
               </div>
             </form>
           </section>
           {site ? (
             <p className="text-sm text-hub-ink-muted">
-              Published barbers are listed at{" "}
+              Published stylists are listed at{" "}
               <a
                 className="underline"
-                href={`${site}/barbers`}
+                href={`${site}/team`}
                 target="_blank"
                 rel="noreferrer"
               >
-                {site.replace("https://", "")}/barbers
+                {site.replace("https://", "")}/team
               </a>
               .
             </p>

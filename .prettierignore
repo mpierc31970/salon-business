@@ -33,3 +33,5 @@ packages/core/src/legal/esign-consent/
 # 09-11: tenant site policy templates (hashed at ack), same rule
 packages/core/src/legal/site-policies.generated.ts
 packages/core/src/legal/site-policies/
+# Vendored agent skills (impeccable), not app code
+.claude/

@@ -21,8 +21,8 @@ export default function TenantError({ reset }: { reset: () => void }) {
       <img
         src="/am-barber/logo.png"
         alt="Superior Salon"
-        width={647}
-        height={472}
+        width={1200}
+        height={507}
         className="h-auto w-[200px]"
       />
       <h1 className="text-[length:var(--site-text-display)] leading-[1.1] font-semibold tracking-[-0.02em]">

@@ -37,7 +37,7 @@ import { StudioTabs } from "../../StudioTabs";
 import { SeatUploadForm } from "../../../photo/SeatUploadForm";
 import { ScheduleSection } from "./ScheduleSection";
 
-export const metadata: Metadata = { title: "Barber" };
+export const metadata: Metadata = { title: "Stylist" };
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ id: string }> };
@@ -93,7 +93,7 @@ export default async function SeatPage({ params }: Props) {
     <div className="flex w-full max-w-[1120px] flex-col gap-8 font-hub text-hub-ink">
       {seat.canManage ? (
         <Link href={STUDIO_BASE} className="text-sm underline">
-          ← All barbers
+          ← All stylists
         </Link>
       ) : null}
       <ScreenHeader
@@ -119,11 +119,11 @@ export default async function SeatPage({ params }: Props) {
           Public page:{" "}
           <a
             className="underline"
-            href={`${site}/barbers/${seat.slug}`}
+            href={`${site}/team/${seat.slug}`}
             target="_blank"
             rel="noreferrer"
           >
-            {org.primaryHost}/barbers/{seat.slug}
+            {org.primaryHost}/team/{seat.slug}
           </a>
         </p>
       ) : null}
@@ -158,7 +158,7 @@ export default async function SeatPage({ params }: Props) {
               id="s-headline"
               name="headline"
               label="Headline"
-              helper="One line under your name, for example: Fades, tapers and beard work."
+              helper="One line under your name, for example: Balayage, lived-in colour and cut and finish."
               defaultValue={seat.headline}
               maxLength={120}
             />
@@ -173,7 +173,7 @@ export default async function SeatPage({ params }: Props) {
             <TextField
               id="s-brand"
               name="brandName"
-              label="Shop or chair name"
+              label="Salon or chair name"
               helper="Your own brand, if you have one. Shows on your page only."
               defaultValue={seat.brandName}
               maxLength={80}
@@ -181,7 +181,7 @@ export default async function SeatPage({ params }: Props) {
             <TextField
               id="s-license"
               name="licenseNumber"
-              label="Texas barber license number"
+              label="Texas cosmetology license number"
               helper="Optional. Shows on your page so clients can look you up with TDLR."
               defaultValue={seat.licenseNumber}
               maxLength={20}
@@ -207,7 +207,7 @@ export default async function SeatPage({ params }: Props) {
                   id="s-slug"
                   name="slug"
                   label="Web address"
-                  helper={`Lowercase letters, numbers and dashes: /barbers/${seat.slug}`}
+                  helper={`Lowercase letters, numbers and dashes: /team/${seat.slug}`}
                   defaultValue={seat.slug}
                   maxLength={60}
                 />
@@ -218,7 +218,7 @@ export default async function SeatPage({ params }: Props) {
                     defaultChecked={seat.isPublished}
                     className="h-5 w-5"
                   />
-                  Show this barber on the site
+                  Show this stylist on the site
                 </label>
               </>
             ) : null}
@@ -288,7 +288,7 @@ export default async function SeatPage({ params }: Props) {
             </div>
           ) : (
             <p className="text-hub-ink-muted">
-              Your own shop or chair logo, shown on your page only.
+              Your own salon or chair logo, shown on your page only.
             </p>
           )}
           <SeatUploadForm
@@ -355,7 +355,7 @@ export default async function SeatPage({ params }: Props) {
           <div className={CARD}>
             <p>
               {seat.linked
-                ? "This barber has signed in and can edit their own page."
+                ? "This stylist has signed in and can edit their own page."
                 : "Send the invite so they can sign in and edit their own page. They only see their own seat."}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -369,7 +369,7 @@ export default async function SeatPage({ params }: Props) {
               ) : null}
               <details className="flex flex-col gap-2">
                 <summary className="cursor-pointer py-2 underline">
-                  Remove barber…
+                  Remove stylist…
                 </summary>
                 <form
                   action={removeSeatAction}

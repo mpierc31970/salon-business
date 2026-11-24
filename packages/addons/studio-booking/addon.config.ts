@@ -3,7 +3,7 @@ export const STUDIO_BOOKING_CONFIG = {
   slug: "studio-booking",
   name: "Studio Booking",
   summary:
-    "Barber seats with their own pages and sign-ins, online booking by barber and service, and chair rent.",
+    "Stylist seats with their own pages and sign-ins, online booking by stylist and service, and chair rent.",
   category: "Booking",
   order: 5,
   version: "1.0.0",

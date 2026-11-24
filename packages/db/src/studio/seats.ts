@@ -273,7 +273,7 @@ async function uniqueSlug(
     });
     if (hit.items.length === 0) return slug;
   }
-  throw new InvalidInput("Choose a different web address for this barber.");
+  throw new InvalidInput("Choose a different web address for this stylist.");
 }
 
 // ---------------------------------------------------------------- reads
@@ -412,7 +412,7 @@ export async function updateSeat(
   }
   if (input.bio !== undefined) body.bio = text(input.bio, "Bio", 2000);
   if (input.brandName !== undefined) {
-    body.brand_name = text(input.brandName, "Shop or chair name", 80);
+    body.brand_name = text(input.brandName, "Salon or chair name", 80);
   }
   if (input.socials !== undefined) body.socials = cleanSocials(input.socials);
   if (input.licenseNumber !== undefined) {
@@ -503,7 +503,7 @@ export async function inviteSeat(
   const email = str(seat.email);
   if (!email) {
     throw new InvalidInput(
-      "Add the barber's email first, then send the invite.",
+      "Add the stylist's email first, then send the invite.",
     );
   }
   return createInvite(
@@ -655,8 +655,8 @@ export async function uploadSeatPhoto(
     alt: (target === "logo"
       ? `${str(seat.brand_name) || str(seat.name)} logo`
       : target === "photo"
-        ? `${str(seat.name)} at the shop`
-        : `Haircut by ${str(seat.name)}`
+        ? `${str(seat.name)} at the salon`
+        : `Work by ${str(seat.name)}`
     ).slice(0, 250),
     ...(opts.filename ? { filename: opts.filename } : {}),
   });

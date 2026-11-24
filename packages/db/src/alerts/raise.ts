@@ -727,7 +727,7 @@ export async function remindAlert(
   alertId: string,
 ): Promise<void> {
   if (ctx.role !== "owner" && ctx.role !== "admin") {
-    throw new Forbidden("only the shop owner can do this");
+    throw new Forbidden("only the salon owner can do this");
   }
   if (!/^[a-z0-9]{15}$/.test(alertId)) throw new NotFound();
   const row = await withSuperuser(async (pb) => {
@@ -764,7 +764,7 @@ export async function remindAlert(
       type: str(row.type),
       sourceKey: str(row.source_key),
       title,
-      safeTitle: "Reminder from the shop",
+      safeTitle: "Reminder from the salon",
       href: str(row.href) || "/hub/alerts",
       ...(str(row.section) ? { section: str(row.section) } : {}),
       audience: { users: [str(row.user)] },

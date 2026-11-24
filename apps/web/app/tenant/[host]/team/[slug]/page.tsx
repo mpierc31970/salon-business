@@ -1,4 +1,4 @@
-// /barbers/<slug> on tenant hosts: one published barber's page (Studio Booking): portrait,
+// /team/<slug> on tenant hosts: one published stylist's page (Studio Booking): portrait,
 // bio, gallery, services with prices and a Book button. Their own shop name, logo, social
 // links and license number show here only (never in the site chrome). Unknown or hidden
 // barber = 404.
@@ -38,11 +38,11 @@ async function load(host: string, slug: string): Promise<PublicSeat | null> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { host, slug } = await params;
   const seat = await load(host, slug);
-  if (!seat) return { title: "Barber not found" };
+  if (!seat) return { title: "Stylist not found" };
   return {
     title: seat.brandName
       ? `${seat.name}, ${seat.brandName}`
-      : `${seat.name}, barber`,
+      : `${seat.name}, stylist`,
     description: seat.headline || `Book with ${seat.name}.`,
   };
 }
@@ -60,7 +60,7 @@ export default async function BarberPage({ params }: Props) {
     >
       <div className="mx-auto max-w-[1120px] px-6 pt-8 md:px-8">
         <Link
-          href="/barbers"
+          href="/team"
           className="inline-flex min-h-11 items-center gap-2 font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--site-focus)]"
         >
           <ArrowLeft size={20} aria-hidden="true" focusable="false" />
@@ -158,7 +158,7 @@ export default async function BarberPage({ params }: Props) {
           ) : null}
           {seat.licenseNumber ? (
             <p className={`text-sm ${MUTED}`}>
-              Texas barber license {seat.licenseNumber}.{" "}
+              Texas cosmetology license {seat.licenseNumber}.{" "}
               <a
                 href="https://www.tdlr.texas.gov/LicenseSearch/"
                 target="_blank"

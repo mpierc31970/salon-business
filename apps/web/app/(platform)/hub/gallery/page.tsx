@@ -64,7 +64,7 @@ export default async function GalleryPage() {
       ) : photos.length === 0 ? (
         <EmptyState
           heading="No photos yet"
-          body="Add a photo above, or add a barber's photo from Alerts."
+          body="Add a photo above, or add a stylist's photo from Alerts."
         />
       ) : (
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">

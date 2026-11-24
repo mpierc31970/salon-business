@@ -111,7 +111,7 @@ export default async function BookingsPage({ searchParams }: Props) {
           className="flex flex-wrap items-center gap-2 text-sm"
         >
           <label htmlFor="flag-hours">
-            Alert me when a barber hasn&apos;t answered a request
+            Alert me when a stylist hasn&apos;t answered a request
           </label>
           <input
             id="flag-hours"
@@ -130,7 +130,7 @@ export default async function BookingsPage({ searchParams }: Props) {
         </form>
       ) : null}
       {manager && seats.length > 1 ? (
-        <nav aria-label="Barber" className="flex flex-wrap gap-2 text-sm">
+        <nav aria-label="Stylist" className="flex flex-wrap gap-2 text-sm">
           <GuardedLink
             href={`${STUDIO_BASE}/bookings`}
             className={`rounded border px-3 py-1 ${seatParam ? "border-hub-border" : "border-hub-accent font-semibold"}`}

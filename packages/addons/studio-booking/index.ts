@@ -24,7 +24,7 @@ export default defineAddon({
   conflicts: [],
   nav: {
     placement: "sidebar",
-    label: "Barbers",
+    label: "Team",
     icon: "CalendarClock",
   },
   sections: STUDIO_SECTIONS,
@@ -74,8 +74,8 @@ export default defineAddon({
     {
       type: "studio-booking.gallery_photo",
       level: "normal",
-      label: "New barber photo",
-      example: "A barber added a photo (add it to the main Gallery or skip)",
+      label: "New stylist photo",
+      example: "A stylist added a photo (add it to the main Gallery or skip)",
       feature: "addon:studio-booking",
       access: "write",
       section: "addon:studio-booking",
@@ -97,11 +97,11 @@ export default defineAddon({
   privacyClauses: [
     {
       id: "studio-booking",
-      heading: "Barber pages and bookings",
-      what: "Each barber's name, photo, bio and services. When you book: your name, email, phone and any note, with the barber, service and time you chose.",
+      heading: "Stylist pages and bookings",
+      what: "Each stylist's name, photo, bio and services. When you book: your name, email, phone and any note, with the stylist, service and time you chose.",
       why: "To show who works here and to hold your appointment, confirm it and remind you before it.",
       howLong:
-        "Barber pages until the barber leaves. Bookings for as long as the shop keeps its records, or until you ask us to remove them.",
+        "Stylist pages until the stylist leaves. Bookings for as long as the salon keeps its records, or until you ask us to remove them.",
     },
   ],
 });

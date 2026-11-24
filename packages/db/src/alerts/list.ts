@@ -303,7 +303,7 @@ export async function listTeamAlerts(
     };
     return res.items.map((r) => ({
       ...toBell(r, new Set()),
-      recipient: names.get(str(r.user)) || "A barber",
+      recipient: names.get(str(r.user)) || "A stylist",
     }));
   });
 }
