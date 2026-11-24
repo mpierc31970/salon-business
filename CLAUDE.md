@@ -4,10 +4,12 @@ Guidance for Claude Code in this repository.
 
 ## What this is
 
-**Superior Salon's website.** A single-site fork of the CDS platform (`~/cds-website`),
-copied once on 2026-11-10 and owned here from now on. CDS changes are **not** synced.
+**Superior Salon's website** (a luxury salon). Forked from `~/am-barbershop` (itself a
+single-site fork of the CDS platform) on 2026-11-24 and owned here from now on. Neither is synced.
+Code identifiers kept from the fork on purpose: the `am-barber` org slug, `am:*` scripts,
+`barber-N.webp` files, `/api/barber-photo`. The public team page is `/team` (`/barbers` 301s).
 
-- Own repo (`github.com/mpierc31970/am-barbershop`), own PocketBase, own Coolify app.
+- Own repo (`github.com/mpierc31970/salon-business`), own PocketBase, own Coolify app.
   Shares nothing at runtime with CDS.
 - The multi-tenant engine is kept as-is. Salon is the **only** organization in the database
   (Studio path, Builder Pro installed), seeded once.
@@ -23,10 +25,10 @@ copied once on 2026-11-10 and owned here from now on. CDS changes are **not** sy
 - CDS staff jobs (fit review, decline, prices, demo reset, indexing) are not scheduled.
 - Sign-ins (`npm run am:roles`, passwords in `.env.local` `AM_*`): website admin
   matthew@metaphysicalevents.com = staff super_admin (`/staff/sign-in`, password + emailed
-  code), not a shop member; shop owners (`/sign-in`): Miguel = pierce1970+BarberOwner@gmail.com and Mike = anmbarberstudio@gmail.com (`AM_COOWNER_*`, own Employee seat "Mike"); Miguel
-  shop and his own Employee seat; barbers pierce1970+barber1-4@gmail.com (`AM_BARBER_EMAIL`) (renter seats, own seat only).
-  Public contact email (site, privacy, form notifications) is the owner's, pierce1970+BarberOwner@gmail.com;
-  matthew@ is only the admin sign-in and technical contact.
+  code), not a shop member; shop owner (`/sign-in`): pierce1970+salonowner@gmail.com
+  (`AM_OWNER_*`); 8 stylists pierce1970+salon1-8@gmail.com (`AM_BARBER_EMAIL`, renter seats).
+  Public contact email (site, privacy, form notifications) is matthew@metaphysicalevents.com
+  (no plus-addressing on that domain). Named sample customers use pierce1970+<lastname>@gmail.com.
 
 `PLATFORM-DESIGN.md` documents the inherited engine (decisions `D<n>`). Treat it as
 reference, not as a roadmap for this site.
@@ -78,34 +80,34 @@ fork; they work against this PocketBase but are rarely needed here.
 
 | Piece | Value |
 |---|---|
-| Coolify | project `Salon Barbershop` (`sd4qjlj1iejgscgqpuwip2sq`), app `am-barbershop-web` (`nimbbo698focxngxsvbxiqoi`), builds `main` from the public GitHub repo with the repo `Dockerfile`; 1g / 1 CPU; env names mirror `.env.local` |
-| PocketBase | container `pocketbase-ambarber`, pinned 0.39.11, loopback `127.0.0.1:8095`, `/root/pocketbase-ambarber/` on the data VPS `31.220.21.126`; superuser in `.env.local` `PB_SUPERUSER_*`, backup bot `PB_BOT_*` |
-| Backups | `/root/pocketbase-ambarber/backup.sh`, cron 04:30, 14 days local + `wasabi:am-barbershop/db` |
-| DNS | Hostinger zone `needtobeedgy.com`: `barber`, `admin.barber` → 82.180.132.176; `api.barber` → 31.220.21.126 |
-| Proxy | `/root/edge-caddy/Caddyfile` on the data VPS (`api.barber` route) |
+| Coolify | project `Superior Salon` (`nmdtg7ffumi5oaxypfs9bly9`), app `superior-salon-web` (`uax7hxhhvgo4vpynkcvt7gvs`), builds `main` from the public GitHub repo with the repo `Dockerfile`; 1g / 1 CPU; env names mirror `.env.local` |
+| PocketBase | container `pocketbase-salon`, pinned 0.39.11, loopback `127.0.0.1:8097`, `/root/pocketbase-salon/` on the data VPS `31.220.21.126`; superuser in `.env.local` `PB_SUPERUSER_*`, backup bot `PB_BOT_*` |
+| Backups | `/root/pocketbase-salon/backup.sh`, cron 04:45, 14 days local + `wasabi:am-barbershop/salon-db` |
+| DNS | Hostinger zone `needtobeedgy.com`: `salon`, `admin.salon` → 82.180.132.176; `api.salon` → 31.220.21.126 |
+| Proxy | `/root/edge-caddy/Caddyfile` on the data VPS (`api.salon` route) |
 
 Access (same machine credentials as cds-website): `ssh pocketbase-cds` (data VPS),
 `ssh -i ~/.ssh/pocketbase-cds root@82.180.132.176` (Coolify VPS), `~/.hostinger_token`,
 `~/.coolify_api_token` (`http://82.180.132.176:8000/api/v1`; set `MSYS_NO_PATHCONV=1` in
-Git Bash). Secrets live in `.env.local` only, never in chat.
+Git Bash). Secrets live in `.env.local` only, never in chat. `.env.local` is not shell-sourceable; read it with node.
 
-- **Never touch** `pocketbase-cds`, `pocketbase-cdsp`, `pocketbase-cdsp-prod`, or any other
-  Coolify app.
+- **Never touch** `pocketbase-cds`, `pocketbase-cdsp`, `pocketbase-cdsp-prod`, `pocketbase-ambarber`,
+  or any other Coolify app.
 - Caddy: back up the Caddyfile, append with `>>` (never `sed -i`), `caddy validate` and
   `caddy reload` inside `supabase-caddy`. Add a route only after its DNS resolves.
 - Migrations: `npm run db:migrations:assemble -- <tmpdir>`, scp that dir into
-  `/root/pocketbase-ambarber/pb_data/pb_migrations/` and `packages/db/pb_hooks` into
-  `/root/pocketbase-ambarber/pb_hooks/`, `docker restart pocketbase-ambarber`, check `_migrations`.
+  `/root/pocketbase-salon/pb_data/pb_migrations/` and `packages/db/pb_hooks` into
+  `/root/pocketbase-salon/pb_hooks/`, `docker restart pocketbase-salon`, check `_migrations`.
 - Deploy: push `main`, then `POST /api/v1/deploy?uuid=<app>&force=true`.
 - Storage: the app's local-disk object store (published pages, media) lives on the Coolify
-  volume `nimbbo698focxngxsvbxiqoi-am-barbershop-data` mounted at `/data`
+  volume `uax7hxhhvgo4vpynkcvt7gvs-uax7hxhhvgo4vpynkcvt7gvs-salon-data` mounted at `/data`
   (`CDS_STORAGE_DIR=/data/storage`, `CDS_PUBLIC_STORAGE_DIR=/data/storage-public`, set in the
   Dockerfile).
 
 ## Seeding the site
 
 `npm run am:seed` (`packages/db/scripts/seed-am-barber.ts`) is idempotent: org, owner
-(`AM_OWNER_EMAIL`, default pierce1970+BarberOwner@gmail.com), theme, intake, assembly, Builder Pro, booking form, pages,
+(`AM_OWNER_EMAIL`, default pierce1970+salonowner@gmail.com), theme, intake, assembly, Builder Pro, booking form, pages,
 service rows, primary host, stage live. Run against prod with
 `CDS_ENV=production CDS_STORAGE_DIR=<dir>/storage CDS_PUBLIC_STORAGE_DIR=<dir>/storage-public
 CDS_EMAIL_TRANSPORT= PLATFORM_HOSTS=admin.salon.needtobeedgy.com npm run am:seed`, then tar

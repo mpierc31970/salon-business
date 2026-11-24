@@ -368,7 +368,7 @@ export function SliderController({
           ) : null}
           {dots ? (
             <div
-              className={`flex items-center ${direction === "rtl" ? "flex-row-reverse" : ""}`}
+              className={`flex min-w-0 flex-wrap items-center justify-center ${direction === "rtl" ? "flex-row-reverse" : ""}`}
             >
               {slides.map((slide, i) => (
                 <button
