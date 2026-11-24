@@ -323,20 +323,11 @@
   content: "";
   display: block;
   width: 7.5rem;
-  height: 9px;
+  height: 10px;
   margin-top: 0.7em;
-  background:
-    linear-gradient(var(--am-champagne), var(--am-champagne)) left center / 45%
-      1px no-repeat,
-    linear-gradient(var(--am-champagne), var(--am-champagne)) right center / 45%
-      1px no-repeat,
-    linear-gradient(
-        45deg,
-        transparent 30%,
-        var(--am-champagne) 30% 70%,
-        transparent 70%
-      )
-      center / 9px 9px no-repeat;
+  /* line, diamond, line in --am-champagne (a data URI can't read the custom property). */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='10'%3E%3Cpath d='M0 5H50M70 5H120' stroke='%23a8875a' stroke-width='1'/%3E%3Cpath d='M60 0L65 5L60 10L55 5Z' fill='%23a8875a'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
 }
 [data-site="am-barber"] main .text-center h1[data-page-title]::after,
 [data-site="am-barber"] main h1.text-center[data-page-title]::after {
@@ -376,25 +367,34 @@
 }
 
 /* Photo rows (About) and the Services menu photos: an offset linen block behind the photo. */
-[data-site="am-barber"] main [data-column] > img.rounded-site-media:only-child,
-[data-site="am-barber"] main[data-services-page] section > img {
+[data-site="am-barber"]
+  main
+  [data-column]
+  > img.rounded-site-media:only-child:not([alt*="logo" i]),
+[data-site="am-barber"]
+  main[data-services-page]
+  section[aria-labelledby]
+  > img {
   box-shadow: 1.25rem 1.25rem 0 0 var(--site-surface-raised);
 }
 [data-site="am-barber"]
   main[data-services-page]
-  section:nth-of-type(even)
+  section[aria-labelledby]:nth-of-type(even)
   > img {
   box-shadow: -1.25rem 1.25rem 0 0 var(--site-surface-raised);
 }
 
 /* Services menu: each list sits on a porcelain card, its group title in italic. */
-[data-site="am-barber"] main[data-services-page] section > div {
+[data-site="am-barber"]
+  main[data-services-page]
+  section[aria-labelledby]
+  > div {
   background: var(--am-white);
   padding: clamp(1.25rem, 3vw, 2.25rem);
   box-shadow: 0 22px 40px -28px
     color-mix(in srgb, var(--site-text) 45%, transparent);
 }
-[data-site="am-barber"] main[data-services-page] section h2 {
+[data-site="am-barber"] main[data-services-page] section[aria-labelledby] h2 {
   font-style: italic;
 }
 
