@@ -143,18 +143,18 @@ describe("uploadImage (ONB-04)", () => {
     expect((await listMedia(ctx, "hero")).map((a) => a.id)).toEqual([first.id]);
   });
 
-  it("refuses the 13th gallery photo with UPL-LIMIT", async (t) => {
+  it("refuses the 25th gallery photo with UPL-LIMIT", async (t) => {
     if (!inst) return t.skip();
     const { ctx } = await bareOrg();
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 24; i++) {
       await uploadImage(ctx, small, "gallery", { store });
     }
     const err = await rejection(uploadImage(ctx, small, "gallery", { store }));
     expect(err.reason).toBe("limit");
     expect(err.message).toBe(
-      "You've added 12 photos, the most for now. Remove one to add another.",
+      "You've added 24 photos, the most for now. Remove one to add another.",
     );
-    expect(await listMedia(ctx, "gallery")).toHaveLength(12);
+    expect(await listMedia(ctx, "gallery")).toHaveLength(24);
   }, 60_000);
 
   it("refuses a 4th mood board", async (t) => {

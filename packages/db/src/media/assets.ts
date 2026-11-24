@@ -70,7 +70,7 @@ export const MEDIA_VARIANTS = ["original", "web", "thumb"] as const;
 export type MediaVariant = (typeof MEDIA_VARIANTS)[number];
 
 export const MEDIA_LIMITS: Record<MediaKind, number> = {
-  gallery: 12,
+  gallery: 24, // Superior Salon: 8 service + 8 gallery seed photos, room for the owner's own
   moodboard: 3,
   logo: 1,
   hero: 1,
