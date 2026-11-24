@@ -24,6 +24,7 @@ describe("RESERVED_SLUGS", () => {
         "barbers",
         "team",
         "book",
+        "services",
         // 11-35: bio short links
         "ig",
         "fb",

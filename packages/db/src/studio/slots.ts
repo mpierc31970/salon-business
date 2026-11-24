@@ -6,8 +6,8 @@
 // instant is UTC milliseconds.
 import type { Day, WeeklyHours } from "@cds/core/intake";
 
-/** Default gap between bookable start times; a barber can pick their own (SLOT_CHOICES). */
-export const SLOT_STEP_MIN = 60;
+/** Default gap between bookable start times (30 min, so a booking is never an hour grid); a barber can pick their own (SLOT_CHOICES). */
+export const SLOT_STEP_MIN = 30;
 export const SLOT_CHOICES = [15, 30, 45, 60, 90, 120] as const;
 
 /** A seat's slot_minutes, or the default when unset / not a choice. */

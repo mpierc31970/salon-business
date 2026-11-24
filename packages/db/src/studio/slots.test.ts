@@ -139,13 +139,20 @@ describe("interval and blocked time", () => {
     now: NOW,
   };
 
-  it("defaults to one start time per hour", () => {
+  it("defaults to a start time every half hour", () => {
     const s = openSlots({ ...base, timeOff: [] });
-    expect(s.map((x) => x.time)).toEqual(["09:00", "10:00", "11:00"]);
-    expect(slotMinutesOf(undefined)).toBe(60);
-    expect(slotMinutesOf(0)).toBe(60);
-    expect(slotMinutesOf(7)).toBe(60);
-    expect(slotMinutesOf(30)).toBe(30);
+    expect(s.map((x) => x.time)).toEqual([
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+    ]);
+    expect(slotMinutesOf(undefined)).toBe(30);
+    expect(slotMinutesOf(0)).toBe(30);
+    expect(slotMinutesOf(7)).toBe(30);
+    expect(slotMinutesOf(60)).toBe(60);
   });
 
   it("blocks only From-To on each blocked day; blank times block the day", () => {

@@ -8,7 +8,7 @@ import { InvalidInput, NotFound } from "@cds/core";
 import type PocketBase from "pocketbase";
 import type { RecordModel } from "pocketbase";
 import { mintOrgContext, type OrgContext } from "../context";
-import { commit, type Op } from "../content/shared";
+import { commit, scopedGet, type Op } from "../content/shared";
 import { readVariantOfRow, removeMedia, uploadImage } from "../media/assets";
 import { raiseGalleryOffer } from "./gallery";
 import { mediaRow, readSocials, type SeatSocial } from "./public";
@@ -21,7 +21,6 @@ import {
   requireManager,
   requireStudio,
   seatFor,
-  seatRow,
   str,
   studioRead,
   studioWrite,
@@ -519,6 +518,66 @@ export async function inviteSeat(
 
 // ---------------------------------------------------------------- menu (owner or barber)
 
+/**
+ * The salon's own menu (the owner's master list) is the seat id "menu": studio_services rows
+ * with no seat. Only managers write it; stylists copy items onto their own seat.
+ */
+export const MENU_SEAT = "menu";
+
+/** Managers only for the salon menu, checked before any read (and any lock). */
+function requireMenuOrSeatWrite(ctx: OrgContext, seatId: string): void {
+  if (seatId === MENU_SEAT) requireManager(ctx, "write");
+  else requireStudio(ctx, "write");
+}
+
+/** "" for the salon menu (caller checked by requireMenuOrSeatWrite), else seatFor's seat id. */
+async function menuOrSeat(
+  pb: PocketBase,
+  ctx: OrgContext,
+  seatId: string,
+): Promise<string> {
+  return seatId === MENU_SEAT ? "" : (await seatFor(pb, ctx, seatId)).id;
+}
+
+/** A service row of this org that belongs to seat `sid` ("" = the menu), else NotFound. */
+async function serviceRow(
+  pb: PocketBase,
+  ctx: OrgContext,
+  sid: string,
+  id: unknown,
+): Promise<RecordModel> {
+  const row = await scopedGet(pb, ctx, "studio_services", id);
+  if (str(row.seat) !== sid) throw new NotFound();
+  return row;
+}
+
+/** The salon menu, for any studio member (stylists pick from it). */
+export async function listMenu(ctx: OrgContext): Promise<SeatService[]> {
+  requireStudio(ctx, "read");
+  return studioRead(async (pb) =>
+    (
+      await pb.collection("studio_services").getFullList({
+        filter: pb.filter("organization = {:org} && seat = ''", {
+          org: ctx.orgId,
+        }),
+        sort: "sort_order,created",
+      })
+    ).map(toService),
+  );
+}
+
+/** Copy one salon-menu item onto a seat (the stylist then edits its price and time). */
+export async function adoptMenuService(
+  ctx: OrgContext,
+  seatId: string,
+  menuId: string,
+): Promise<{ id: string }> {
+  requireStudio(ctx, "write");
+  const item = (await listMenu(ctx)).find((m) => m.id === menuId);
+  if (!item || seatId === MENU_SEAT) throw new NotFound();
+  return saveSeatService(ctx, seatId, { ...item, id: "" });
+}
+
 export type ServiceInput = {
   id?: unknown;
   name: unknown;
@@ -532,7 +591,7 @@ export async function saveSeatService(
   seatId: string,
   input: ServiceInput,
 ): Promise<{ id: string }> {
-  requireStudio(ctx, "write");
+  requireMenuOrSeatWrite(ctx, seatId);
   const body = {
     name: text(input?.name, "Service name", 80, true),
     description: text(input?.description, "Description", 300),
@@ -540,10 +599,10 @@ export async function saveSeatService(
     price_cents: cleanPrice(input?.priceCents),
   };
   return studioWrite(ctx, async (pb) => {
-    const seat = await seatFor(pb, ctx, seatId);
+    const sid = await menuOrSeat(pb, ctx, seatId);
     const audit = { targetCollection: "studio_services" };
     if (input.id !== undefined && input.id !== "") {
-      const row = await seatRow(pb, ctx, "studio_services", seat, input.id);
+      const row = await serviceRow(pb, ctx, sid, input.id);
       await commit(
         pb,
         ctx,
@@ -559,11 +618,11 @@ export async function saveSeatService(
     const count = await pb.collection("studio_services").getList(1, 1, {
       filter: pb.filter("organization = {:org} && seat = {:s}", {
         org: ctx.orgId,
-        s: seat.id,
+        s: sid,
       }),
       fields: "id",
     });
-    if (count.totalItems >= 40) {
+    if (count.totalItems >= (sid ? 40 : 80)) {
       throw new InvalidInput("A menu holds up to 40 services.");
     }
     const id = newRecordId();
@@ -578,7 +637,7 @@ export async function saveSeatService(
           body: {
             ...body,
             organization: ctx.orgId,
-            seat: seat.id,
+            seat: sid,
             sort_order: count.totalItems + 1,
           },
         },
@@ -594,10 +653,10 @@ export async function removeSeatService(
   seatId: string,
   serviceId: string,
 ): Promise<void> {
-  requireStudio(ctx, "write");
+  requireMenuOrSeatWrite(ctx, seatId);
   await studioWrite(ctx, async (pb) => {
-    const seat = await seatFor(pb, ctx, seatId);
-    const row = await seatRow(pb, ctx, "studio_services", seat, serviceId);
+    const sid = await menuOrSeat(pb, ctx, seatId);
+    const row = await serviceRow(pb, ctx, sid, serviceId);
     await commit(
       pb,
       ctx,

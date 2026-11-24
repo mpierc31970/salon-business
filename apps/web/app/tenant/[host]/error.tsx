@@ -22,7 +22,7 @@ export default function TenantError({ reset }: { reset: () => void }) {
         src="/am-barber/logo.png"
         alt="Superior Salon"
         width={1200}
-        height={507}
+        height={882}
         className="h-auto w-[200px]"
       />
       <h1 className="text-[length:var(--site-text-display)] leading-[1.1] font-semibold tracking-[-0.02em]">

@@ -1,6 +1,9 @@
 // Studio Booking chokepoint barrel (D144-D166 for a single shop). Explicit exports only.
 export {
+  adoptMenuService,
   GALLERY_MAX,
+  listMenu,
+  MENU_SEAT,
   SEAT_KINDS,
   SEAT_SOCIALS,
   cleanLicense,
@@ -40,7 +43,12 @@ export {
   removeMainGalleryPhoto,
 } from "./gallery";
 export type { GalleryOffer, MainGalleryPhoto } from "./gallery";
-export { getPublicSeat, listPublicSeats, readPublicSeatPhoto } from "./public";
+export {
+  getPublicSeat,
+  listPublicMenu,
+  listPublicSeats,
+  readPublicSeatPhoto,
+} from "./public";
 export type { PublicSeat, PublicSeatService, SeatSocial } from "./public";
 export { isManager as isStudioManager, STUDIO_SLUG } from "./shared";
 export { addTimeOff, getSchedule, removeTimeOff, saveHours } from "./schedule";

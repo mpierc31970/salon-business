@@ -122,6 +122,29 @@ export async function listPublicSeats(
   return studioRead((pb) => publishedSeats(pb, site.orgId));
 }
 
+/** The salon's own menu (owner's master list: services with no seat), in the owner's order. */
+export async function listPublicMenu(
+  site: SiteContext,
+): Promise<PublicSeatService[]> {
+  assertSiteContext(site);
+  return studioRead(async (pb) => {
+    if (!(await studioActive(pb, site.orgId))) return [];
+    const rows = await pb.collection("studio_services").getFullList({
+      filter: pb.filter("organization = {:org} && seat = ''", {
+        org: site.orgId,
+      }),
+      sort: "sort_order,created",
+    });
+    return rows.map((s) => ({
+      id: s.id,
+      name: str(s.name),
+      description: str(s.description),
+      durationMinutes: num(s.duration_minutes),
+      priceCents: num(s.price_cents),
+    }));
+  });
+}
+
 /** One published barber by their web address, or null. */
 export async function getPublicSeat(
   site: SiteContext,

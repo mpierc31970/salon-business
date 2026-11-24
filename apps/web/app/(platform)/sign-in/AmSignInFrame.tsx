@@ -24,7 +24,7 @@ export function AmSignInFrame({
           src="/am-barber/logo.png"
           alt="Superior Salon, back to the site"
           width={1200}
-          height={507}
+          height={882}
           className="h-auto w-[180px]"
         />
       </a>

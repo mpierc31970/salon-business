@@ -2,11 +2,26 @@
   {
     "file": "apps/web/app/tenant/[host]/am-barber.css",
     "pattern": "--am-",
-    "reason": "Salon fork: the site's neon tubes, deep button red and black/white, declared once as --am-* custom properties and used through var()"
+    "reason": "Salon fork: the site's champagne and black/white, declared once as --am-* custom properties and used through var()"
   },
   {
     "file": "packages/ui/src/site/client/LocationMap.tsx",
-    "pattern": "maplibregl.Marker({ color: \"#e0242b\" })",
-    "reason": "Salon fork: MapLibre's Marker takes a literal colour string, not a CSS var(); the Salon red pin"
+    "pattern": "const IVORY = \"#",
+    "reason": "Salon fork: MapLibre paint properties and the Marker take literal colour strings, not CSS var(); the ivory/bronze map palette"
+  },
+  {
+    "file": "packages/ui/src/site/client/LocationMap.tsx",
+    "pattern": "const BRONZE = \"#",
+    "reason": "Salon fork: MapLibre paint properties and the Marker take literal colour strings, not CSS var(); the ivory/bronze map palette"
+  },
+  {
+    "file": "packages/ui/src/site/client/LocationMap.tsx",
+    "pattern": ": { fill: \"#",
+    "reason": "Salon fork: MapLibre paint properties and the Marker take literal colour strings, not CSS var(); the ivory/bronze map palette"
+  },
+  {
+    "file": "packages/ui/src/site/client/LocationMap.tsx",
+    "pattern": ": { line: \"#",
+    "reason": "Salon fork: MapLibre paint properties and the Marker take literal colour strings, not CSS var(); the ivory/bronze map palette"
   }
 ]

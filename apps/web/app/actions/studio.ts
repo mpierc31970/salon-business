@@ -5,6 +5,8 @@
 // redirect back to the screen and a one-time note (studioNote cookie) the page shows.
 import {
   addTimeOff,
+  adoptMenuService,
+  MENU_SEAT,
   createSeat,
   decideGalleryPhoto,
   editMainGalleryPhoto,
@@ -161,8 +163,26 @@ export async function inviteSeatAction(form: FormData): Promise<void> {
   );
 }
 
-export async function saveServiceAction(form: FormData): Promise<void> {
+/** A seat id, or MENU_SEAT for the salon menu (the owner's master list). */
+function menuOrSeatField(form: FormData): string {
+  return field(form, "seatId") === MENU_SEAT
+    ? MENU_SEAT
+    : idField(form, "seatId");
+}
+
+export async function adoptServiceAction(form: FormData): Promise<void> {
   const seatId = idField(form, "seatId");
+  await act(
+    `${STUDIO_BASE}/services?seat=${seatId}`,
+    "Service added. Set your own price and time below.",
+    async ({ ctx }) => {
+      await adoptMenuService(ctx, seatId, idField(form, "menuId"));
+    },
+  );
+}
+
+export async function saveServiceAction(form: FormData): Promise<void> {
+  const seatId = menuOrSeatField(form);
   await act(
     `${STUDIO_BASE}/services?seat=${seatId}`,
     "Service saved.",
@@ -179,7 +199,7 @@ export async function saveServiceAction(form: FormData): Promise<void> {
 }
 
 export async function removeServiceAction(form: FormData): Promise<void> {
-  const seatId = idField(form, "seatId");
+  const seatId = menuOrSeatField(form);
   await act(
     `${STUDIO_BASE}/services?seat=${seatId}`,
     "Service removed.",

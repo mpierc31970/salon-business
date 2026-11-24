@@ -292,13 +292,13 @@ async function orgRow(
 // ------------------------------------------------------------------ images
 async function ogImage(): Promise<Uint8Array> {
   const logo = await sharp(readFileSync(LOGO))
-    .resize(900, 380, { fit: "contain", background: "#00000000" })
+    .resize(900, 500, { fit: "contain", background: "#00000000" })
     .png()
     .toBuffer();
   const buf = await sharp({
     create: { width: 1200, height: 630, channels: 3, background: "#fbf8f3" },
   })
-    .composite([{ input: logo, top: 125, left: 150 }])
+    .composite([{ input: logo, gravity: "center" }])
     .jpeg({ quality: 88 })
     .toBuffer();
   return new Uint8Array(buf);

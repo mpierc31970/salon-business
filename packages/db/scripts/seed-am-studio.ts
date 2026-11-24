@@ -1,7 +1,7 @@
 // Superior Salon: Studio Booking seed (idempotent). Installs the add-on (no charge: the
 // salon owns this fork), adds the eight placeholder team seats with their AI placeholder
-// portraits and their own service menus, and puts "Our Team" (the /team route) in the
-// site menu.
+// portraits and their own service menus, the salon menu (the owner's master list on
+// /services), and puts "Services" and "Our Team" (/services, /team) in the site menu.
 //
 //   npm run am:studio-seed
 //
@@ -25,7 +25,9 @@ import { newRecordId } from "../src/repository";
 import {
   createSeat,
   getSchedule,
+  listMenu,
   listSeats,
+  MENU_SEAT,
   saveHours,
   saveSeatService,
   updateSeat,
@@ -37,6 +39,8 @@ const PLACEHOLDER_BIO =
   "Placeholder profile. This team member's real name, photo and bio are coming soon.";
 
 // TODO(owner): real prices; 0 shows "Ask" on the site. [name, minutes, dollars, description]
+// Minutes follow high-end salon and hotel-spa menus (2026-11-24 research); a re-run syncs
+// them onto the salon menu and every seat's service of the same name.
 const MENU = {
   cut: [
     "Signature cut and finish",
@@ -52,13 +56,13 @@ const MENU = {
   ],
   color: [
     "Creative color",
-    120,
+    90,
     225,
     "All-over color, designed for your skin tone and lifestyle.",
   ],
   balayage: [
     "Balayage and lived-in color",
-    180,
+    210,
     325,
     "Hand-painted brightness that grows out softly. Includes gloss and finish.",
   ],
@@ -70,19 +74,19 @@ const MENU = {
   ],
   bridal: [
     "Bridal and occasion styling",
-    90,
+    75,
     250,
     "Polished updos and soft waves for the day itself.",
   ],
   trial: [
     "Bridal trial",
-    60,
+    90,
     150,
     "Plan and test your wedding-day look in advance.",
   ],
   facial: [
     "Signature facial",
-    75,
+    60,
     195,
     "Cleanse, exfoliate, extract and a sculpting massage with a custom mask.",
   ],
@@ -94,13 +98,13 @@ const MENU = {
   ],
   scalp: [
     "Scalp ritual",
-    60,
+    45,
     145,
     "Detox, exfoliation and a deep scalp massage for healthier growth.",
   ],
   trichology: [
     "Trichology consultation",
-    45,
+    60,
     120,
     "A close look at scalp and hair health, with a plan to follow.",
   ],
@@ -116,10 +120,10 @@ const MENU = {
     110,
     "Strengthening overlay with hand-painted detail.",
   ],
-  pedicure: ["Spa pedicure", 75, 95, "Soak, exfoliation, massage and polish."],
+  pedicure: ["Spa pedicure", 60, 95, "Soak, exfoliation, massage and polish."],
   brows: [
     "Brow lamination and tint",
-    60,
+    45,
     95,
     "Lifted, shaped and tinted brows that stay put.",
   ],
@@ -131,13 +135,13 @@ const MENU = {
   ],
   makeup: [
     "Makeup application",
-    75,
+    60,
     175,
     "Soft glam or editorial, for events and photographs.",
   ],
   bridalMakeup: [
     "Bridal makeup",
-    120,
+    90,
     295,
     "Long-wear bridal makeup, including lashes.",
   ],
@@ -321,6 +325,39 @@ async function main(): Promise<void> {
     log(`PASS hours for ${seat.name}`);
   }
 
+  // The salon menu (the owner's master list, shown on /services): the full MENU, once.
+  if ((await listMenu(ctx)).length === 0) {
+    for (const [svc, min, dollars, desc] of Object.values(MENU)) {
+      await saveSeatService(ctx, MENU_SEAT, {
+        name: svc,
+        description: desc,
+        durationMinutes: min,
+        priceCents: dollars * 100,
+      });
+    }
+  }
+  log("PASS salon menu");
+
+  // Durations: the MENU minutes onto the salon menu and every seat's same-named service.
+  const minutesOf = new Map<string, number>(
+    Object.values(MENU).map(([n, m]) => [n, m]),
+  );
+  const targets = [
+    { seatId: MENU_SEAT, services: await listMenu(ctx) },
+    ...(await listSeats(ctx)).map((s) => ({
+      seatId: s.id,
+      services: s.services,
+    })),
+  ];
+  for (const { seatId, services } of targets) {
+    for (const svc of services) {
+      const min = minutesOf.get(svc.name);
+      if (min === undefined || min === svc.durationMinutes) continue;
+      await saveSeatService(ctx, seatId, { ...svc, durationMinutes: min });
+      log(`PASS ${svc.name}: ${svc.durationMinutes} -> ${min} min`);
+    }
+  }
+
   // The team pages live at /team; an older "Barbers" item pointing at /barbers is renamed.
   const url = `https://${HOST}/team`;
   const old = `https://${HOST}/barbers`;
@@ -341,6 +378,23 @@ async function main(): Promise<void> {
     await saveNav(ctx, deps, { ...nav, items });
   }
   log("PASS Our Team in the site menu");
+
+  // "Services" (the /services route) sits just before Our Team.
+  const svcUrl = `https://${HOST}/services`;
+  const nav2 = await getNav(ctx);
+  if (nav2 && !nav2.items.some((i) => i.target === svcUrl)) {
+    const items = [...nav2.items];
+    const at = items.findIndex((i) => i.target === url);
+    items.splice(at < 0 ? items.length : at, 0, {
+      id: newRecordId(),
+      label: "Services",
+      target: svcUrl,
+      new_tab: false,
+      children: [],
+    });
+    await saveNav(ctx, deps, { ...nav2, items });
+  }
+  log("PASS Services in the site menu");
 }
 
 main().catch((err: unknown) => {

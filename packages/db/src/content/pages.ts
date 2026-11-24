@@ -56,6 +56,8 @@ export const RESERVED_SLUGS: readonly string[] = Object.freeze([
   "barbers",
   "team",
   "book",
+  // Salon fork: the salon menu page.
+  "services",
   // P11 bio short links (11-35; DASH-15, D199): the ten preset codes and /go/<code>. New
   // pages may not take them; an existing page keeps its slug (WR-A06: an unchanged slug is
   // never re-checked) and wins, so that account's link falls back to /go/<code> (Pitfall 19).

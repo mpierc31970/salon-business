@@ -14,7 +14,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { siteForRequest } from "../../../../lib/tenant";
-import { MUTED, minutes, money, Portrait } from "../team/BarberViews";
+import { MUTED, minutes, money, photoUrl, Portrait } from "../team/BarberViews";
 import { FocusAlert } from "./FocusAlert";
 
 export const dynamic = "force-dynamic";
@@ -175,6 +175,18 @@ export default async function BookPage({ params, searchParams }: Props) {
 
   return (
     <main id="content" tabIndex={-1} className="outline-none" data-book-page="">
+      {seat ? (
+        <div className="mx-auto max-w-[1120px] px-6 pt-6 md:px-8">
+          <Link
+            href="/team"
+            data-back-to-list=""
+            className="inline-flex min-h-11 items-center gap-2 font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--site-focus)]"
+          >
+            <ArrowLeft size={20} aria-hidden="true" focusable="false" />
+            Back to list
+          </Link>
+        </div>
+      ) : null}
       <PageTitleHeader
         title={seat ? `Book with ${seat.name}` : "Book an appointment"}
       />
@@ -185,31 +197,24 @@ export default async function BookPage({ params, searchParams }: Props) {
 
         <Step n={1} title={seat ? "Your stylist" : "Pick your stylist"}>
           {seat ? (
-            <div className="flex flex-col gap-3">
-              <div>
-                <Link
-                  href="/team"
-                  className="inline-flex min-h-11 items-center gap-2 font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--site-focus)]"
-                >
-                  <ArrowLeft size={20} aria-hidden="true" focusable="false" />
-                  Back to list
-                </Link>
-              </div>
-              <div
-                className="w-40 border-2 border-site-primary"
-                data-chosen-barber=""
+            <div className="flex items-center gap-4" data-chosen-barber="">
+              {seat.photo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={photoUrl(seat.photo, "thumb")}
+                  alt={seat.name}
+                  width={96}
+                  height={96}
+                  data-avatar=""
+                  className="size-24 shrink-0 rounded-full object-cover object-top"
+                />
+              ) : null}
+              <Link
+                href={`/team/${seat.slug}`}
+                className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4"
               >
-                <Portrait seat={seat} />
-                <p className="px-2 py-2 font-semibold">{seat.name}</p>
-              </div>
-              <div>
-                <Link
-                  href={`/team/${seat.slug}`}
-                  className={siteButtonClasses("secondary")}
-                >
-                  View {seat.name}&apos;s profile
-                </Link>
-              </div>
+                View profile
+              </Link>
             </div>
           ) : seats.length === 0 ? (
             <p className={MUTED}>

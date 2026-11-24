@@ -56,7 +56,7 @@ function DefaultNotFound({ children }: { children?: ReactNode }) {
           src="/am-barber/logo.png"
           alt="Superior Salon"
           width={1200}
-          height={507}
+          height={882}
           className="h-auto w-[200px]"
         />
       </div>

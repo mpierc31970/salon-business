@@ -1,13 +1,18 @@
 // /hub/studio-booking/services: one barber's services and prices (Salon fork: its own tab,
-// after Bookings). A barber edits their own; the owner picks a barber (?seat=).
-import { Button, TextField } from "@cds/ui/hub";
+// after Bookings). A barber edits their own; the owner picks a barber (?seat=) or edits the
+// salon menu (?seat=menu, the default: the master list on the public /services page).
+// Stylists add menu items to their own seat, then set their own price and time.
+import { listMenu } from "@cds/db";
+import { Button, Select, TextField } from "@cds/ui/hub";
 import type { Metadata } from "next";
 import {
+  adoptServiceAction,
   removeServiceAction,
   saveServiceAction,
 } from "../../../../actions/studio";
+import { requireHubSession } from "../../../../../lib/session";
 import { duration, money, priceField } from "../../../../../lib/studio";
-import { SeatTabFrame, seatForTab } from "../SeatTabFrame";
+import { menuForTab, SeatTabFrame, seatForTab } from "../SeatTabFrame";
 
 export const metadata: Metadata = { title: "Services & Pricing" };
 export const dynamic = "force-dynamic";
@@ -20,7 +25,15 @@ type Props = {
 };
 
 export default async function ServicesPage({ searchParams }: Props) {
-  const { seat, manager, seats } = await seatForTab(searchParams);
+  const menuTab = await menuForTab(searchParams);
+  const { seat, manager, seats } = menuTab ?? (await seatForTab(searchParams));
+  // Menu items this seat doesn't offer yet (by name).
+  const offered = new Set(seat.services.map((s) => s.name.toLowerCase()));
+  const adoptable = menuTab
+    ? []
+    : (await listMenu((await requireHubSession()).ctx)).filter(
+        (m) => !offered.has(m.name.toLowerCase()),
+      );
   return (
     <SeatTabFrame
       title="Services & Pricing"
@@ -30,6 +43,34 @@ export default async function ServicesPage({ searchParams }: Props) {
       manager={manager}
       seats={seats}
     >
+      {menuTab ? (
+        <p className="text-sm text-hub-ink-muted">
+          The salon menu shows on the public Services page. Stylists add these
+          to their own menu and set their own price and time.
+        </p>
+      ) : adoptable.length > 0 ? (
+        <form
+          action={adoptServiceAction}
+          aria-label="Add from the salon menu"
+          className={`${CARD} sm:flex-row sm:items-end`}
+        >
+          <input type="hidden" name="seatId" value={seat.id} />
+          <div className="sm:flex-1">
+            <Select
+              id="menu-pick"
+              name="menuId"
+              label="Add from the salon menu"
+              options={adoptable.map((m) => ({
+                value: m.id,
+                label: `${m.name} · ${duration(m.durationMinutes)} · ${money(m.priceCents)}`,
+              }))}
+            />
+          </div>
+          <Button type="submit" size="sm" variant="primary">
+            Add to my services
+          </Button>
+        </form>
+      ) : null}
       <section aria-label="Services" className="flex flex-col gap-3">
         {seat.services.map((s) => (
           <form

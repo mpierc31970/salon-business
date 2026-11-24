@@ -1,6 +1,14 @@
+import { Forbidden } from "@cds/core";
 import { describe, expect, it } from "vitest";
+import { mintOrgContext } from "../context";
 import { readSocials } from "./public";
-import { cleanLicense, cleanSocials } from "./seats";
+import {
+  cleanLicense,
+  cleanSocials,
+  MENU_SEAT,
+  removeSeatService,
+  saveSeatService,
+} from "./seats";
 
 describe("cleanSocials", () => {
   it("turns handles and bare domains into links, drops blanks", () => {
@@ -44,5 +52,25 @@ describe("cleanLicense", () => {
     expect(cleanLicense(" bb12345 ")).toBe("BB12345");
     expect(cleanLicense("")).toBe("");
     expect(() => cleanLicense("12<3")).toThrow();
+  });
+});
+
+describe("the salon menu (owner's master list)", () => {
+  const renter = mintOrgContext({
+    orgId: "orgaaaaaaaaaaaa",
+    actor: "useraaaaaaaaaaa",
+    role: "renter",
+    grants: ["studio-booking"],
+    ip: "test",
+  });
+  const svc = { name: "Cut", durationMinutes: 30, priceCents: 3000 };
+
+  it("a stylist can't write it (refused before any read)", async () => {
+    await expect(saveSeatService(renter, MENU_SEAT, svc)).rejects.toThrow(
+      Forbidden,
+    );
+    await expect(
+      removeSeatService(renter, MENU_SEAT, "svcaaaaaaaaaaaa"),
+    ).rejects.toThrow(Forbidden);
   });
 });

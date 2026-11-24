@@ -2,7 +2,14 @@
 // A barber always works on their own seat; the owner (and Admins) pick a barber with
 // ?seat=<id> (first barber by default). getSeat answers NotFound for a seat the caller may
 // not open, so a barber can never reach another barber's tab by editing the URL.
-import { getSeat, listSeats, mySeatId, type SeatView } from "@cds/db";
+import {
+  getSeat,
+  listMenu,
+  listSeats,
+  MENU_SEAT,
+  mySeatId,
+  type SeatView,
+} from "@cds/db";
 import { InlineAlert } from "@cds/ui/hub";
 import { ScreenHeader } from "@cds/ui/hub/shell";
 import { notFound } from "next/navigation";
@@ -39,6 +46,30 @@ export async function seatForTab(
   }
 }
 
+/**
+ * Services tab only: the salon menu (the owner's master list) for a manager on ?seat=menu or
+ * no ?seat; null otherwise (a stylist, or a manager who picked a stylist).
+ */
+export async function menuForTab(
+  searchParams:
+    Promise<Record<string, string | string[] | undefined>> | undefined,
+): Promise<{
+  seat: Pick<SeatView, "id" | "name" | "services">;
+  manager: true;
+  seats: SeatView[];
+} | null> {
+  const { ctx } = await requireHubSession();
+  if (ctx.role !== "owner" && ctx.role !== "admin") return null;
+  const sp = searchParams ? await searchParams : {};
+  if (sp.seat !== undefined && sp.seat !== MENU_SEAT) return null;
+  const [services, seats] = await Promise.all([listMenu(ctx), listSeats(ctx)]);
+  return {
+    seat: { id: MENU_SEAT, name: "Salon menu", services },
+    manager: true,
+    seats,
+  };
+}
+
 export async function SeatTabFrame({
   title,
   tab,
@@ -52,12 +83,16 @@ export async function SeatTabFrame({
   tab: StudioTab;
   /** This tab's route under STUDIO_BASE, e.g. "/services". */
   path: string;
-  seat: SeatView;
+  seat: Pick<SeatView, "id" | "name">;
   manager: boolean;
-  seats: SeatView[];
+  seats: Pick<SeatView, "id" | "name">[];
   children: ReactNode;
 }) {
   const note = await readStudioNote();
+  const picks =
+    path === "/services"
+      ? [{ id: MENU_SEAT, name: "Salon menu" }, ...seats]
+      : seats;
   return (
     <div className="flex w-full max-w-[880px] flex-col gap-8 font-hub text-hub-ink">
       <ScreenHeader
@@ -71,9 +106,9 @@ export async function SeatTabFrame({
           {note.text}
         </InlineAlert>
       ) : null}
-      {manager && seats.length > 1 ? (
+      {manager && picks.length > 1 ? (
         <nav aria-label="Stylist" className="flex flex-wrap gap-2 text-sm">
-          {seats.map((s) => (
+          {picks.map((s) => (
             <GuardedLink
               key={s.id}
               href={`${STUDIO_BASE}${path}?seat=${s.id}`}
