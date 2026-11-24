@@ -25,10 +25,10 @@ import {
 import { text } from "../urls";
 import { readBusiness } from "./business";
 
-// Salon fork: the shop's position, looked up once (Nominatim, 2026-11-10; the street segment
-// holding 2505 S Carrier Pkwy). ponytail: one fixed point for the one site; store lat/lng on
-// the block (geocoded at save) if this ever serves another address.
-const SHOP = { lat: 32.6845009, lng: -97.0099349 };
+// Salon fork: the shop's position (Main St, downtown Grand Prairie, for the site's address
+// 1234 Main St). ponytail: one fixed point for the one site; store lat/lng on the block
+// (geocoded at save) if this ever serves another address.
+const SHOP = { lat: 32.7459, lng: -96.9978 };
 
 export function MapSection({
   content,

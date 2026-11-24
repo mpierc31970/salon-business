@@ -63,19 +63,16 @@ const OWNER_EMAIL = (
 const OWNER_NAME = "Salon owner";
 const CONTACT_EMAIL = "matthew@metaphysicalevents.com";
 const HOST = (process.env.AM_HOST || "salon.needtobeedgy.com").toLowerCase();
-const PHONE = "(214) 518-6852";
-const TEL = "tel:+12145186852";
+// No public phone: contact is by email and the booking form.
 const ADDRESS = {
-  street: "2505 S Carrier Pkwy",
+  street: "1234 Main St",
   city: "Grand Prairie",
   state: "TX",
-  zip: "75052",
+  zip: "75050",
 };
 const DIRECTIONS =
   "https://www.google.com/maps/dir/?api=1&destination=" +
-  encodeURIComponent(
-    "Superior Salon, 2505 S Carrier Pkwy, Grand Prairie, TX 75052",
-  );
+  encodeURIComponent("Superior Salon, 1234 Main St, Grand Prairie, TX 75050");
 const LOGO = "apps/web/public/am-barber/logo.png";
 // The square S monogram: the favicon / app icon source (site-icons.ts prefers a
 // "Site icon:" moodboard row over the wide wordmark logo).
@@ -356,13 +353,13 @@ async function main(): Promise<void> {
     org_name: NAME,
     tagline: "Hair, color, skin and nails",
     font_pairing: "warm-classic",
-    phone: PHONE,
+    phone: "",
     public_email: CONTACT_EMAIL,
     address: ADDRESS,
     service_area: "Grand Prairie and the DFW Mid-Cities",
     time_zone: "America/Chicago",
     about:
-      "Superior Salon is a luxury hair and beauty salon on South Carrier Parkway in Grand Prairie. Precision cuts, lived-in color, bridal styling, skin, nails, brows and makeup, each by a specialist, in a calm, light-filled space.",
+      "Superior Salon is a luxury hair and beauty salon on Main Street in Grand Prairie. Precision cuts, lived-in color, bridal styling, skin, nails, brows and makeup, each by a specialist, in a calm, light-filled space.",
     mission:
       "Unhurried appointments, honest advice and results that feel like you, only more so.",
     headline: "Beautiful hair, radiant skin, quietly perfected.",
@@ -526,7 +523,7 @@ async function afterAssembly(
     ],
     after_submit: {
       kind: "message",
-      message: `Thank you. We'll call or text you shortly to confirm your appointment. Need us sooner? Call ${PHONE}.`,
+      message: `Thank you. We'll be in touch shortly to confirm your appointment. Need us sooner? Email ${CONTACT_EMAIL}.`,
       page: "",
       button_text: "",
     },
@@ -539,7 +536,7 @@ async function afterAssembly(
       auto_reply: {
         enabled: true,
         subject: "We received your appointment request",
-        body: `Hi {name},\n\nThank you for choosing Superior Salon. We'll be in touch shortly to confirm your appointment.\n\nNeed us now? Call ${PHONE}.\n2505 S Carrier Pkwy, Grand Prairie, TX 75052\n\nSuperior Salon`,
+        body: `Hi {name},\n\nThank you for choosing Superior Salon. We'll be in touch shortly to confirm your appointment.\n\nNeed us now? Email ${CONTACT_EMAIL}.\n1234 Main St, Grand Prairie, TX 75050\n\nSuperior Salon`,
       },
       routing: [],
       save_resume: false,
@@ -611,7 +608,7 @@ async function afterAssembly(
       {
         ...keep("text"),
         kind: "text",
-        html: "<p>Superior Salon is a luxury hair and beauty salon on South Carrier Parkway in Grand Prairie. Precision cuts, lived-in color, bridal styling, skin, nails, brows and makeup, each by a specialist, in a calm, light-filled space.</p>",
+        html: "<p>Superior Salon is a luxury hair and beauty salon on Main Street in Grand Prairie. Precision cuts, lived-in color, bridal styling, skin, nails, brows and makeup, each by a specialist, in a calm, light-filled space.</p>",
       },
       button(1, "Book Now", "/team", "primary"),
       button(2, "Get Directions", DIRECTIONS, "secondary"),
@@ -639,7 +636,7 @@ async function afterAssembly(
     row_layout: "full",
     content: {
       heading: "Services",
-      text: `<p>By appointment. Book online with your stylist, or call ${PHONE}. Prices start from the amounts shown and are confirmed at your consultation.</p>`,
+      text: `<p>By appointment. Book online with your stylist, or email ${CONTACT_EMAIL}. Prices start from the amounts shown and are confirmed at your consultation.</p>`,
     },
   };
   const current = await listSections(ctx, home.id);
@@ -724,7 +721,7 @@ async function afterAssembly(
       meta_title:
         "Superior Salon | Luxury Hair and Beauty Salon in Grand Prairie, TX",
       meta_description:
-        "Precision cuts, balayage, bridal styling, facials, nails, brows and makeup at 2505 S Carrier Pkwy, Grand Prairie, TX. Call (214) 518-6852.",
+        "Precision cuts, balayage, bridal styling, facials, nails, brows and makeup at 1234 Main St, Grand Prairie, TX.",
       share_image: share,
     },
   });
@@ -749,7 +746,7 @@ async function afterAssembly(
       row_layout: "full",
       content: {
         heading: "Book an appointment",
-        text: `<p>Tell us what you'd like and when. We'll call or text to confirm. In a hurry? <a href="${TEL}">Call ${PHONE}</a>.</p><p>2505 S Carrier Pkwy, Grand Prairie, TX 75052 · <a href="${DIRECTIONS}">Get directions</a> · <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>`,
+        text: `<p>Tell us what you'd like and when. We'll be in touch to confirm.</p><p>1234 Main St, Grand Prairie, TX 75050 · <a href="${DIRECTIONS}">Get directions</a> · <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>`,
       },
     },
     ...copy.map((s) => ({
@@ -773,7 +770,7 @@ async function afterAssembly(
     seo: {
       meta_title: "Contact Superior Salon | Grand Prairie, TX",
       meta_description:
-        "Book an appointment at Superior Salon, 2505 S Carrier Pkwy, Grand Prairie, TX 75052. Call (214) 518-6852.",
+        "Book an appointment at Superior Salon, 1234 Main St, Grand Prairie, TX 75050.",
     },
   });
   const cRes = await publishPage(ctx, contact.id, pdeps);

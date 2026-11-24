@@ -122,7 +122,7 @@ live `published/index.json`).
 ## Git
 
 `C:\Users\guypa` is itself a git repo. **Never use worktrees.** Run git with
-`-C C:/Users/guypa/am-barbershop` and check `git rev-parse --show-toplevel` before committing.
+`-C C:/Users/guypa/salon-business` and check `git rev-parse --show-toplevel` before committing.
 
 ## Working preferences
 

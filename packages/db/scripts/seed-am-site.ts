@@ -42,6 +42,7 @@ import { mintOrgContext, mintSystemContext } from "../src/context";
 import { queueDesignWrite } from "../src/theme";
 import { listMedia, removeMedia, uploadImage } from "../src/media/assets";
 import { readFileSync } from "node:fs";
+import { scrubContact } from "./contact-scrub";
 
 const SLUG = "am-barber";
 const PUB = "apps/web/public/am-barber";
@@ -65,7 +66,7 @@ const RETIRED_ALTS = new Set([
   "A young boy in the barber's chair after his cut",
 ]);
 const STORY = [
-  "Superior Salon is a luxury hair and beauty salon on South Carrier Parkway in Grand Prairie. We built it for people who want to be looked after properly: time to talk, specialists who listen, and results that feel like you on your best day.",
+  "Superior Salon is a luxury hair and beauty salon on Main Street in Grand Prairie. We built it for people who want to be looked after properly: time to talk, specialists who listen, and results that feel like you on your best day.",
   "Every service has its own expert. Our colorists hand-paint balayage and lived-in color, our stylists cut and finish with precision, and our bridal team creates looks that last from the first photograph to the last dance. Skin, nails, brows, lashes and makeup are done to the same standard, under one roof.",
   "We use professional, gentle products, keep appointments unhurried, and finish every visit with advice you can use at home.",
 ];
@@ -202,7 +203,7 @@ async function main(): Promise<void> {
     content: {
       ...(introContent ?? {}),
       heading: "",
-      text: "<p>Color, cuts, bridal looks, skin and nails, and the salon itself at 2505 S Carrier Pkwy, Grand Prairie.</p>",
+      text: "<p>Color, cuts, bridal looks, skin and nails, and the salon itself at 1234 Main St, Grand Prairie.</p>",
     },
   });
   const grid = have.find((s) => s.section_type === "gallery");
@@ -257,7 +258,7 @@ async function main(): Promise<void> {
     seo: {
       meta_title: "Gallery | Superior Salon, Grand Prairie, TX",
       meta_description:
-        "Balayage, precision cuts, bridal styling and the salon at Superior Salon, 2505 S Carrier Pkwy, Grand Prairie, TX.",
+        "Balayage, precision cuts, bridal styling and the salon at Superior Salon, 1234 Main St, Grand Prairie, TX.",
     },
   });
   const gRes = await publishPage(ctx, page.id, pdeps);
@@ -372,7 +373,7 @@ async function main(): Promise<void> {
         ...(cta.content as Record<string, unknown>),
         heading: "Your appointment, your way",
         description:
-          "Book online with your stylist or call us. We'll find the right specialist and the right time.",
+          "Book online with your stylist or send us a message. We'll find the right specialist and the right time.",
       },
     });
   }
@@ -514,6 +515,27 @@ async function main(): Promise<void> {
     const aRes = await publishPage(ctx, about.id, pdeps);
     if (aRes.status !== "published") throw new Error("About publish held");
     log("PASS about: title About the Salon");
+  }
+
+  // Contact copy: no phone, the placeholder address (contact-scrub.ts), on every page.
+  for (const p of await listPages(ctx)) {
+    let changed = 0;
+    for (const s of await listSections(ctx, p.id)) {
+      const content = scrubContact(s.content);
+      if (!content) continue;
+      await saveSection(ctx, sections, {
+        id: s.id,
+        pageId: p.id,
+        section_type: s.section_type,
+        row_layout: s.row_layout,
+        content,
+      });
+      changed++;
+    }
+    if (changed === 0) continue;
+    const r = await publishPage(ctx, p.id, pdeps);
+    if (r.status !== "published") throw new Error(`${p.slug} publish held`);
+    log(`PASS contact copy: ${p.slug} (${changed} sections)`);
   }
 }
 
