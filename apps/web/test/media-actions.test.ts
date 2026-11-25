@@ -226,5 +226,5 @@ describe("upload copy parity", () => {
       expect(ui.UPL_COPY.tooBig(bytes)).toBe(real.UPLOAD_COPY.tooBig(bytes));
     }
     // A cold importActual of the whole @cds/db barrel can pass 5 s under full-suite load (07-33).
-  }, 30_000);
+  }, 120_000); // heavy importActual of @cds/db; 30s flaked under memory pressure
 });

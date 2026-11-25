@@ -23,6 +23,34 @@ const TINTS: Record<string, { fill?: string; line?: string }> = {
 };
 const BRONZE = "#a8875a";
 
+const COMPARE = new Set(["<", "<=", ">", ">="]);
+
+/**
+ * Positron compares feature properties that many features lack (e.g. the road shields'
+ * `["<=", ["get", "ref_length"], 6]`), so MapLibre warns "Expected value to be of type
+ * number, but found null". Wrap each compared `["get", k]` in a coalesce that makes a
+ * missing value fail the comparison, as it already did, without the warning.
+ */
+export function numericGetsSafe(expr: unknown): unknown {
+  if (!Array.isArray(expr)) return expr;
+  const out = expr.map(numericGetsSafe);
+  if (COMPARE.has(out[0] as string)) {
+    const less = out[0] === "<" || out[0] === "<=";
+    for (const i of [1, 2]) {
+      const a = out[i];
+      // Left of "<" a missing value becomes huge, right of it tiny: always false.
+      const big = less === (i === 1);
+      if (Array.isArray(a) && a[0] === "get" && a.length === 2)
+        out[i] = [
+          "coalesce",
+          a,
+          big ? Number.MAX_SAFE_INTEGER : -Number.MAX_SAFE_INTEGER,
+        ];
+    }
+  }
+  return out;
+}
+
 export type LocationMapProps = {
   lat: number;
   lng: number;
@@ -45,11 +73,20 @@ export function LocationMap({ lat, lng, label, title }: LocationMapProps) {
         if (cancelled) return;
         const m = new maplibregl.Map({
           container: el,
-          style: STYLE,
           center: [lng, lat],
           zoom: 15,
           cooperativeGestures: true,
           attributionControl: { compact: false },
+        });
+        m.setStyle(STYLE, {
+          transformStyle: (_prev, next) => ({
+            ...next,
+            layers: next.layers.map((l) =>
+              "filter" in l && l.filter
+                ? ({ ...l, filter: numericGetsSafe(l.filter) } as typeof l)
+                : l,
+            ),
+          }),
         });
         m.addControl(
           new maplibregl.NavigationControl({ showCompass: false }),
